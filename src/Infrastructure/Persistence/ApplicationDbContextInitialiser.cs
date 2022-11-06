@@ -74,7 +74,7 @@ public class ApplicationDbContextInitialiser
         }
     }
 
-    public async Task TrySeedAsync()
+    public async Task TrySeedAsync(bool shouldSeedRoles = true, bool shouldSeedUsers = true)
     {
         var supportedRoles = new List<ApplicationRole>()
         {
@@ -86,7 +86,8 @@ public class ApplicationDbContextInitialiser
         foreach (var supportedRole in supportedRoles)
         {
             var applicationUsersForSupportedRole = new List<ApplicationUser>();
-            if (_roleManager.Roles.All(r => r.Name != supportedRole.Name))
+            if (_roleManager.Roles.All(r => r.Name != supportedRole.Name)
+                && shouldSeedRoles)
             {
                 _logger.LogInformation("Seeding database with Role: \n{@supportedRole}", supportedRole);
                 await _roleManager.CreateAsync(supportedRole);
@@ -112,7 +113,8 @@ public class ApplicationDbContextInitialiser
 
             foreach (var applicationUserForSupportedRole in applicationUsersForSupportedRole)
             {
-                if (_userManager.Users.All(u => u.UserName != applicationUserForSupportedRole.UserName))
+                if (_userManager.Users.All(u => u.UserName != applicationUserForSupportedRole.UserName)
+                    && shouldSeedUsers)
                 {
                     await _userManager.CreateAsync(applicationUserForSupportedRole, "Password1!");
                     await _userManager.AddToRolesAsync(applicationUserForSupportedRole, new[] { supportedRole.Name });

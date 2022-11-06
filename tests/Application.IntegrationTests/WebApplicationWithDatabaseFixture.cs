@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Respawn;
+using TransfusionAPI.Domain.Entities;
+using TransfusionAPI.Application.Common.Constants;
 
 namespace TransfusionAPI.Application.IntegrationTests;
 
@@ -94,7 +96,12 @@ public class WebApplicationWithDatabaseFixture
 
     public async Task ResetState()
     {
+        using var scope = _scopeFactory.CreateScope();
+
         await _checkpoint.Reset(_configuration.GetConnectionString("DefaultConnection"));
+
+        var initialiser = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitialiser>();
+        await initialiser.TrySeedAsync(shouldSeedUsers: false);
     }
 
     public async Task<TEntity?> FindAsync<TEntity>(params object[] keyValues)
@@ -105,6 +112,26 @@ public class WebApplicationWithDatabaseFixture
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
         return await context.FindAsync<TEntity>(keyValues);
+    }
+
+    public async Task<(ApplicationUser? applicationUser, Donor? donor)> FindDonorAsync(string username)
+    {
+        using var scope = _scopeFactory.CreateScope();
+
+        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
+        
+        var applicationUser = await userManager.FindByEmailAsync(username);
+        if (applicationUser is null)
+            throw new Exception($"Application user with {username} could not be found");
+
+        var isInRole = await userManager.IsInRoleAsync(applicationUser, SupportedRoles.Donor);
+        if(!isInRole)
+            throw new Exception($"Application user with {username} is not in the donor role {SupportedRoles.Donor}");
+
+        var donor = await context.Donors.SingleOrDefaultAsync(d => d.ApplicationUserId == applicationUser.Id);
+        return (applicationUser, donor);
     }
 
     public async Task AddAsync<TEntity>(TEntity entity)
