@@ -10,6 +10,8 @@ namespace TransfusionAPI.Application.Common.Behaviours;
 /// </summary>
 public class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull, IRequest<TResponse>
 {
+    private static readonly int Threshold_ms = 500;
+
     private readonly Stopwatch _timer;
     private readonly ILogger<TRequest> _logger;
     private readonly ICurrentUserService _currentUserService;
@@ -37,20 +39,20 @@ public class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequ
 
         var elapsedMilliseconds = _timer.ElapsedMilliseconds;
 
-        if (elapsedMilliseconds > 500)
+        var requestName = typeof(TRequest).Name;
+        var userId = _currentUserService.UserId ?? string.Empty;
+        var userName = string.Empty;
+
+        if (!string.IsNullOrEmpty(userId))
         {
-            var requestName = typeof(TRequest).Name;
-            var userId = _currentUserService.UserId ?? string.Empty;
-            var userName = string.Empty;
-
-            if (!string.IsNullOrEmpty(userId))
-            {
-                userName = await _identityService.GetUserNameAsync(userId);
-            }
-
-            _logger.LogWarning("TransfusionAPI Long Running Request: {Name} ({ElapsedMilliseconds} milliseconds) {@UserId} {@UserName} {@Request}",
-                requestName, elapsedMilliseconds, userId, userName, request);
+            userName = await _identityService.GetUserNameAsync(userId);
         }
+
+        var isLongRunningRequest = elapsedMilliseconds > Threshold_ms;
+
+        _logger.Log(isLongRunningRequest ? LogLevel.Warning : LogLevel.Information,
+            "TransfusionAPI Request: {Name} ({ElapsedMilliseconds} milliseconds) {@UserId} {@UserName} {@Request}", 
+            requestName, elapsedMilliseconds, userId, userName, request);
 
         return response;
     }

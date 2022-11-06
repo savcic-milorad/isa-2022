@@ -20,8 +20,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Identity\Commands\" />
-      <Folder Include="Identity\EventHandlers\" />
       <Folder Include="Identity\Queries\" />
     </ItemGroup>
 

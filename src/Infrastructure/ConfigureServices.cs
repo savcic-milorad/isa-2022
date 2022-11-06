@@ -36,8 +36,14 @@ public static class ConfigureServices
         services.AddScoped<ApplicationDbContextInitialiser>();
 
         services
-            .AddIdentityCore<ApplicationUser>()
-            .AddRoles<IdentityRole>()
+            .AddIdentityCore<ApplicationUser>(op =>
+            {
+                op.User.RequireUniqueEmail = true;
+                op.Password.RequireNonAlphanumeric = false;
+                op.SignIn.RequireConfirmedEmail = false;
+                op.SignIn.RequireConfirmedAccount = false;
+            })
+            .AddRoles<ApplicationRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
 
         services.AddTransient<IDateTime, DateTimeService>();

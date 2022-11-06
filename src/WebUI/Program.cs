@@ -24,19 +24,22 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(options =>
     {
         options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-        options.RoutePrefix = "/api";
-        options.DocumentTitle = "Clean architecture";
+        //options.RoutePrefix = "/api";
+        options.DocumentTitle = "TransfusionAPI";
     });
 
     app.UseDeveloperExceptionPage();
+
     // Executes migrations automatically
     app.UseMigrationsEndPoint();
 
     // Initialise and seed database
     using (var scope = app.Services.CreateScope())
     {
+        var shouldDropDatabase = builder.Configuration.GetValue<bool>("ShouldDropDatabase");
+
         var initialiser = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitialiser>();
-        await initialiser.InitialiseAsync();
+        await initialiser.InitialiseAsync(shouldDropDatabase);
         await initialiser.SeedAsync();
     }
 }
@@ -56,7 +59,11 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
+//app.MapControllers();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
 
 app.UseSpa(options =>
 {

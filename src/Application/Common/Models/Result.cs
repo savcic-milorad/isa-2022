@@ -17,6 +17,11 @@ public class Result
         return new Result(true, Array.Empty<string>());
     }
 
+    public static Result Failure(string error)
+    {
+        return new Result(false, new List<string>() { error });
+    }
+
     public static Result Failure(IEnumerable<string> errors)
     {
         return new Result(false, errors);

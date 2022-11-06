@@ -65,7 +65,7 @@ public class WebApplicationWithDatabaseFixture
 
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-        var user = new ApplicationUser { UserName = userName, Email = userName };
+        var user = new ApplicationUser(userName);
 
         var result = await userManager.CreateAsync(user, password);
 

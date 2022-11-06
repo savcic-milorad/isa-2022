@@ -1,8 +1,9 @@
-﻿using TransfusionAPI.Domain.Entities;
-using TransfusionAPI.Infrastructure.Identity;
+﻿using TransfusionAPI.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Text;
+using TransfusionAPI.Application.Common.Constants;
 
 namespace TransfusionAPI.Infrastructure.Persistence;
 
@@ -11,9 +12,9 @@ public class ApplicationDbContextInitialiser
     private readonly ILogger<ApplicationDbContextInitialiser> _logger;
     private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly RoleManager<IdentityRole> _roleManager;
+    private readonly RoleManager<ApplicationRole> _roleManager;
 
-    public ApplicationDbContextInitialiser(ILogger<ApplicationDbContextInitialiser> logger, ApplicationDbContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+    public ApplicationDbContextInitialiser(ILogger<ApplicationDbContextInitialiser> logger, ApplicationDbContext context, UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager)
     {
         _logger = logger;
         _context = context;
@@ -21,12 +22,35 @@ public class ApplicationDbContextInitialiser
         _roleManager = roleManager;
     }
 
-    public async Task InitialiseAsync()
+    public async Task InitialiseAsync(bool shouldDeleteDatabase = false)
     {
         try
         {
             if (_context.Database.IsSqlServer())
             {
+                if(shouldDeleteDatabase)
+                {
+                    _logger.LogInformation("Ensuring database is deleted.");
+                    await _context.Database.EnsureDeletedAsync();
+                }
+
+                _logger.LogInformation("Listing already applied migrations to the database, should be empty if database was deleted.");
+                var appliedMigrations = await _context.Database.GetAppliedMigrationsAsync();
+                var appliedMigrationsString = appliedMigrations.Aggregate(
+                    new StringBuilder("\n\n"),
+                    (acc, val) => acc.Append($"{val}\n"),
+                    acc => acc.ToString());
+
+                _logger.LogInformation("Executing all pending migrations on the database.");
+                var pendingMigrations = await _context.Database.GetPendingMigrationsAsync();
+                var pendingMigrationsString = pendingMigrations.Aggregate(
+                    new StringBuilder("\n\n"),
+                    (acc, val) => acc.Append($"{val}\n"),
+                    acc => acc.ToString());
+
+                _logger.LogInformation("Applied migrations: {appliedMigrations}", appliedMigrationsString);
+                _logger.LogInformation("Pending migrations: {pendingMigrations}", pendingMigrationsString);
+
                 await _context.Database.MigrateAsync();
             }
         }
@@ -52,40 +76,51 @@ public class ApplicationDbContextInitialiser
 
     public async Task TrySeedAsync()
     {
-        // Default roles
-        var administratorRole = new IdentityRole("Administrator");
-
-        if (_roleManager.Roles.All(r => r.Name != administratorRole.Name))
+        var supportedRoles = new List<ApplicationRole>()
         {
-            await _roleManager.CreateAsync(administratorRole);
-        }
+            new ApplicationRole(SupportedRoles.Administrator),
+            new ApplicationRole(SupportedRoles.Donor),
+            new ApplicationRole(SupportedRoles.Staff)
+        };
 
-        // Default users
-        var administrator = new ApplicationUser { UserName = "administrator@localhost", Email = "administrator@localhost" };
-
-        if (_userManager.Users.All(u => u.UserName != administrator.UserName))
+        foreach (var supportedRole in supportedRoles)
         {
-            await _userManager.CreateAsync(administrator, "Administrator1!");
-            await _userManager.AddToRolesAsync(administrator, new[] { administratorRole.Name });
-        }
-
-        // Default data
-        // Seed, if necessary
-        if (!_context.TodoLists.Any())
-        {
-            _context.TodoLists.Add(new TodoList
+            var applicationUsersForSupportedRole = new List<ApplicationUser>();
+            if (_roleManager.Roles.All(r => r.Name != supportedRole.Name))
             {
-                Title = "Todo List",
-                Items =
-                {
-                    new TodoItem { Title = "Make a todo list 📃" },
-                    new TodoItem { Title = "Check off the first item ✅" },
-                    new TodoItem { Title = "Realise you've already done two things on the list! 🤯"},
-                    new TodoItem { Title = "Reward yourself with a nice, long nap 🏆" },
-                }
-            });
+                _logger.LogInformation("Seeding database with Role: \n{@supportedRole}", supportedRole);
+                await _roleManager.CreateAsync(supportedRole);
+            }
+            else
+                continue;
 
-            await _context.SaveChangesAsync();
+            switch (supportedRole.Name)
+            {
+                case SupportedRoles.Administrator:
+                    applicationUsersForSupportedRole.Add(new ApplicationUser("administrator@mail.com"));
+                    break;
+                case SupportedRoles.Donor:
+                    applicationUsersForSupportedRole.Add(new ApplicationUser("donor@mail.com"));
+                    break;
+                case SupportedRoles.Staff:
+                    applicationUsersForSupportedRole.Add(new ApplicationUser("staff@mail.com"));
+                    break;
+                default:
+                    _logger.LogError("Unsupported {role} while seeding default users", supportedRole.NormalizedName);
+                    throw new NotImplementedException();
+            }
+
+            foreach (var applicationUserForSupportedRole in applicationUsersForSupportedRole)
+            {
+                if (_userManager.Users.All(u => u.UserName != applicationUserForSupportedRole.UserName))
+                {
+                    await _userManager.CreateAsync(applicationUserForSupportedRole, "Password1!");
+                    await _userManager.AddToRolesAsync(applicationUserForSupportedRole, new[] { supportedRole.Name });
+                    _logger.LogInformation("{Role} role has following user: \n{@User}", supportedRole, applicationUserForSupportedRole);
+                }
+                else
+                    continue;
+            }
         }
     }
 }

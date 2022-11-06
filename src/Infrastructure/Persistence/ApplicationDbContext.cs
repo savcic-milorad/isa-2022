@@ -7,10 +7,14 @@ using TransfusionAPI.Infrastructure.Persistence.Interceptors;
 using MediatR;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
+using System.Data;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace TransfusionAPI.Infrastructure.Persistence;
 
-public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplicationDbContext
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>, IApplicationDbContext
 {
     private readonly IMediator _mediator;
     private readonly AuditableEntitySaveChangesInterceptor _auditableEntitySaveChangesInterceptor;
@@ -29,6 +33,11 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
 
     public DbSet<TodoItem> TodoItems => Set<TodoItem>();
 
+    public DbSet<Donor> Donors => Set<Donor>();
+    
+    public DatabaseFacade DatabaseFacade => Database;
+
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
@@ -38,6 +47,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
+        optionsBuilder.ConfigureWarnings(w => w.Throw(SqlServerEventId.SavepointsDisabledBecauseOfMARS));
         optionsBuilder.AddInterceptors(_auditableEntitySaveChangesInterceptor);
     }
 
@@ -46,5 +56,10 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
         await _mediator.DispatchDomainEvents(this);
 
         return await base.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task<IDbContextTransaction> BeginTransactionAsync(IsolationLevel isolationLevel)
+    {
+        return await Database.BeginTransactionAsync(isolationLevel);
     }
 }
