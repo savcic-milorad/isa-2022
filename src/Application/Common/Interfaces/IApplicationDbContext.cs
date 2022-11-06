@@ -12,10 +12,6 @@ public interface IApplicationDbContext
 
     DbSet<Donor> Donors { get; }
 
-    DbSet<TodoList> TodoLists { get; }
-
-    DbSet<TodoItem> TodoItems { get; }
-
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 
     Task<IDbContextTransaction> BeginTransactionAsync(IsolationLevel isolationLevel);

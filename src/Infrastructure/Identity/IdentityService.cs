@@ -9,18 +9,15 @@ namespace TransfusionAPI.Infrastructure.Identity;
 
 public class IdentityService : IIdentityService
 {
-    private readonly RoleManager<ApplicationRole> _roleManager;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
     private readonly IAuthorizationService _authorizationService;
 
     public IdentityService(
-        RoleManager<ApplicationRole> roleManager,
         UserManager<ApplicationUser> userManager,
         IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory,
         IAuthorizationService authorizationService)
     {
-        _roleManager = roleManager;
         _userManager = userManager;
         _userClaimsPrincipalFactory = userClaimsPrincipalFactory;
         _authorizationService = authorizationService;
@@ -33,13 +30,13 @@ public class IdentityService : IIdentityService
         return user.UserName;
     }
 
-    public async Task<(Result Result, string UserId)> CreateUserAsync(string userName, string password)
+    public async Task<Result<string>> CreateUserAsync(string userName, string password)
     {
         var user = new ApplicationUser(userName);
 
         var result = await _userManager.CreateAsync(user, password);
 
-        return (result.ToApplicationResult(), user.Id);
+        return result.ToApplicationResult(user.Id);
     }
 
     public async Task<bool> IsInRoleAsync(string userId, string role)
@@ -79,16 +76,16 @@ public class IdentityService : IIdentityService
         return result.ToApplicationResult();
     }
 
-    public async Task<(Result Result, string UserId)> CreateDonorAsync(string userName, string password)
+    public async Task<Result<string>> CreateDonorAsync(string userName, string password)
     {
         var user = new ApplicationUser(userName);
 
         var result = await _userManager.CreateAsync(user, password);
         if (!result.Succeeded)
-            return (result.ToApplicationResult(), user.Id);
+            return result.ToApplicationResult<string>();
 
         var addToRoleResult = await _userManager.AddToRoleAsync(user, SupportedRoles.Donor);
 
-        return (addToRoleResult.ToApplicationResult(), user.Id);
+        return addToRoleResult.ToApplicationResult(user.Id);
     }
 }

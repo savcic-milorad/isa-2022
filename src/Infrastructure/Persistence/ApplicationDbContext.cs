@@ -29,10 +29,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
         _auditableEntitySaveChangesInterceptor = auditableEntitySaveChangesInterceptor;
     }
 
-    public DbSet<TodoList> TodoLists => Set<TodoList>();
-
-    public DbSet<TodoItem> TodoItems => Set<TodoItem>();
-
     public DbSet<Donor> Donors => Set<Donor>();
     
     public DatabaseFacade DatabaseFacade => Database;

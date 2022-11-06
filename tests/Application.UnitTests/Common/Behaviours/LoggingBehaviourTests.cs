@@ -1,26 +1,26 @@
 ﻿using FakeItEasy;
 using TransfusionAPI.Application.Common.Behaviours;
 using TransfusionAPI.Application.Common.Interfaces;
-using TransfusionAPI.Application.TodoItems.Commands.CreateTodoItem;
 using Microsoft.Extensions.Logging;
 using Xunit;
+using TransfusionAPI.Application.Identity.Commands.CreateDonor;
 
 namespace TransfusionAPI.Application.UnitTests.Common.Behaviours;
 
 public class LoggingBehaviourTests
 {
-    private readonly ILogger<CreateTodoItemCommand> _logger;
+    private readonly ILogger<CreateDonorCommand> _logger;
     private readonly ICurrentUserService _currentUserService;
     private readonly IIdentityService _identityService;
-    private readonly LoggingBehaviour<CreateTodoItemCommand> _sut;
+    private readonly LoggingBehaviour<CreateDonorCommand> _sut;
 
     public LoggingBehaviourTests()
     {
-        _logger = A.Fake<ILogger<CreateTodoItemCommand>>();
+        _logger = A.Fake<ILogger<CreateDonorCommand>>();
         _currentUserService = A.Fake<ICurrentUserService>();
         _identityService = A.Fake<IIdentityService>();
 
-        _sut = new LoggingBehaviour<CreateTodoItemCommand>(_logger, _currentUserService, _identityService);
+        _sut = new LoggingBehaviour<CreateDonorCommand>(_logger, _currentUserService, _identityService);
     }
 
     [Fact]
@@ -31,7 +31,22 @@ public class LoggingBehaviourTests
         var callToIdentityService = A.CallTo(() => _identityService.GetUserNameAsync(A<string>.Ignored));
 
         // Act
-        await _sut.Process(new CreateTodoItemCommand { ListId = 1, Title = "title" }, new CancellationToken());
+        await _sut.Process(
+            new CreateDonorCommand
+            {
+                UserName = "johnsmith@mail.org",
+                Password = "John1234",
+                FirstName = "John",
+                LastName = "Smith",
+                Sex = Domain.Enums.Sex.Male,
+                JMBG = "0101001001122",
+                State = "Serbia",
+                HomeAddress = "Narodnog Fronta",
+                City = "Novi Sad",
+                PhoneNumber = "064123456",
+                Occupation = "QA",
+                OccupationInfo = "Testing code"
+            }, new CancellationToken());
 
         // Assert
         callToIdentityService.MustHaveHappenedOnceExactly();
@@ -49,7 +64,21 @@ public class LoggingBehaviourTests
         var callToIdentityService = A.CallTo(() => _identityService.GetUserNameAsync(A<string>.Ignored));
 
         // Act
-        await _sut.Process(new CreateTodoItemCommand { ListId = 1, Title = "title" }, new CancellationToken());
+        await _sut.Process(new CreateDonorCommand
+        {
+            UserName = "johnsmith@mail.org",
+            Password = "John1234",
+            FirstName = "John",
+            LastName = "Smith",
+            Sex = Domain.Enums.Sex.Male,
+            JMBG = "0101001001122",
+            State = "Serbia",
+            HomeAddress = "Narodnog Fronta",
+            City = "Novi Sad",
+            PhoneNumber = "064123456",
+            Occupation = "QA",
+            OccupationInfo = "Testing code"
+        }, new CancellationToken());
 
         // Assert
         callToIdentityService.MustNotHaveHappened();

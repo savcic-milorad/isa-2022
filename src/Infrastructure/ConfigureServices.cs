@@ -5,7 +5,6 @@ using TransfusionAPI.Infrastructure.Persistence;
 using TransfusionAPI.Infrastructure.Persistence.Interceptors;
 using TransfusionAPI.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

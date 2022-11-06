@@ -1,5 +1,4 @@
-﻿using System.Data;
-using MediatR;
+﻿using MediatR;
 using TransfusionAPI.Application.Common.Interfaces;
 using TransfusionAPI.Application.Common.Models;
 using TransfusionAPI.Domain.Entities;
@@ -8,7 +7,7 @@ using TransfusionAPI.Domain.Events;
 
 namespace TransfusionAPI.Application.Identity.Commands.CreateDonor;
 
-public record CreateDonorCommand : IRequest<Result>
+public record CreateDonorCommand : IRequest<Result<string>>
 {
     public string UserName { get; init; } = string.Empty;
     public string Password { get; init; } = string.Empty;
@@ -24,7 +23,7 @@ public record CreateDonorCommand : IRequest<Result>
     public string OccupationInfo { get; init; } = string.Empty;
 }
 
-public class CreateDonorCommandHandler : IRequestHandler<CreateDonorCommand, Result>
+public class CreateDonorCommandHandler : IRequestHandler<CreateDonorCommand, Result<string>>
 {
     private readonly IApplicationDbContext _context;
     private readonly IIdentityService _identityService;
@@ -35,19 +34,19 @@ public class CreateDonorCommandHandler : IRequestHandler<CreateDonorCommand, Res
         _identityService = identityService;
     }
 
-    public async Task<Result> Handle(CreateDonorCommand command, CancellationToken cancellationToken)
+    public async Task<Result<string>> Handle(CreateDonorCommand command, CancellationToken cancellationToken)
     {
         using (var transaction = await _context.DatabaseFacade.BeginTransactionAsync())
         {
-            var (result, applicationUserId) = await _identityService.CreateDonorAsync(command.UserName, command.Password);
-            if (!result.Succeeded)
+            var createDonorResult = await _identityService.CreateDonorAsync(command.UserName, command.Password);
+            if (!createDonorResult.Succeeded)
             {
                 await transaction.RollbackAsync();
-                return result;
+                return createDonorResult;
             }
 
             var entity = new Donor(
-                applicationUserId,
+                ApplicationUserId: createDonorResult.Payload,
                 command.FirstName,
                 command.LastName,
                 command.Sex,
@@ -66,7 +65,7 @@ public class CreateDonorCommandHandler : IRequestHandler<CreateDonorCommand, Res
             await _context.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync();
 
-            return Result.Success();
+            return Result.Success(entity.ApplicationUserId);
         }
     }
 }
