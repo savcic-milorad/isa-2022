@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using TransfusionAPI.Application.Common.Interfaces;
+﻿using TransfusionAPI.Application.Common.Interfaces;
 using TransfusionAPI.Application.Common.Security;
 using TransfusionAPI.Domain.Enums;
 using MediatR;
@@ -14,16 +12,20 @@ public record GetTodosQuery : IRequest<TodosVm>;
 public class GetTodosQueryHandler : IRequestHandler<GetTodosQuery, TodosVm>
 {
     private readonly IApplicationDbContext _context;
-    private readonly IMapper _mapper;
 
-    public GetTodosQueryHandler(IApplicationDbContext context, IMapper mapper)
+    public GetTodosQueryHandler(IApplicationDbContext context)
     {
         _context = context;
-        _mapper = mapper;
     }
 
     public async Task<TodosVm> Handle(GetTodosQuery request, CancellationToken cancellationToken)
     {
+        var list = await _context.TodoLists
+                .Include(l => l.Items)
+                .OrderBy(t => t.Title)
+                .ToListAsync();
+        var mappedList = list.Select(TodoListDto.From).ToList();
+
         return new TodosVm
         {
             PriorityLevels = Enum.GetValues(typeof(PriorityLevel))
@@ -31,11 +33,7 @@ public class GetTodosQueryHandler : IRequestHandler<GetTodosQuery, TodosVm>
                 .Select(p => new PriorityLevelDto { Value = (int)p, Name = p.ToString() })
                 .ToList(),
 
-            Lists = await _context.TodoLists
-                .AsNoTracking()
-                .ProjectTo<TodoListDto>(_mapper.ConfigurationProvider)
-                .OrderBy(t => t.Title)
-                .ToListAsync(cancellationToken)
+            Lists = mappedList
         };
     }
 }

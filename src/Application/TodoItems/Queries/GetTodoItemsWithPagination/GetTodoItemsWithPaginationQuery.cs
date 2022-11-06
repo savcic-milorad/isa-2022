@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using TransfusionAPI.Application.Common.Interfaces;
+﻿using TransfusionAPI.Application.Common.Interfaces;
 using TransfusionAPI.Application.Common.Mappings;
 using TransfusionAPI.Application.Common.Models;
 using MediatR;
@@ -17,20 +15,21 @@ public record GetTodoItemsWithPaginationQuery : IRequest<PaginatedList<TodoItemB
 public class GetTodoItemsWithPaginationQueryHandler : IRequestHandler<GetTodoItemsWithPaginationQuery, PaginatedList<TodoItemBriefDto>>
 {
     private readonly IApplicationDbContext _context;
-    private readonly IMapper _mapper;
 
-    public GetTodoItemsWithPaginationQueryHandler(IApplicationDbContext context, IMapper mapper)
+    public GetTodoItemsWithPaginationQueryHandler(IApplicationDbContext context)
     {
         _context = context;
-        _mapper = mapper;
     }
 
     public async Task<PaginatedList<TodoItemBriefDto>> Handle(GetTodoItemsWithPaginationQuery request, CancellationToken cancellationToken)
     {
-        return await _context.TodoItems
+        var paginatedList = await _context.TodoItems
             .Where(x => x.ListId == request.ListId)
             .OrderBy(x => x.Title)
-            .ProjectTo<TodoItemBriefDto>(_mapper.ConfigurationProvider)
             .PaginatedListAsync(request.PageNumber, request.PageSize);
+
+        var mappedPaginatedList = paginatedList.PaginatedListMap(TodoItemBriefDto.From);
+
+        return mappedPaginatedList;
     }
 }

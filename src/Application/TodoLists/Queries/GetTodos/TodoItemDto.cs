@@ -1,10 +1,8 @@
-﻿using AutoMapper;
-using TransfusionAPI.Application.Common.Mappings;
-using TransfusionAPI.Domain.Entities;
+﻿using TransfusionAPI.Domain.Entities;
 
 namespace TransfusionAPI.Application.TodoLists.Queries.GetTodos;
 
-public class TodoItemDto : IMapFrom<TodoItem>
+public class TodoItemDto
 {
     public int Id { get; set; }
 
@@ -18,9 +16,16 @@ public class TodoItemDto : IMapFrom<TodoItem>
 
     public string? Note { get; set; }
 
-    public void Mapping(Profile profile)
+    public static TodoItemDto From(TodoItem todoItem)
     {
-        profile.CreateMap<TodoItem, TodoItemDto>()
-            .ForMember(d => d.Priority, opt => opt.MapFrom(s => (int)s.Priority));
+        return new TodoItemDto()
+        {
+            Id = todoItem.Id,
+            Title = todoItem.Title,
+            Done = todoItem.Done,
+            Priority = (int)todoItem.Priority,
+            Note = todoItem.Note,
+            ListId = todoItem.ListId
+        };
     }
 }
