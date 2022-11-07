@@ -7,7 +7,7 @@ using TransfusionAPI.Domain.Events;
 
 namespace TransfusionAPI.Application.Identity.Commands.CreateDonor;
 
-public record CreateDonorCommand : IRequest<Result<string>>
+public record CreateDonorCommand : IRequest<Result<Donor>>
 {
     public string UserName { get; init; } = string.Empty;
     public string Password { get; init; } = string.Empty;
@@ -23,7 +23,7 @@ public record CreateDonorCommand : IRequest<Result<string>>
     public string OccupationInfo { get; init; } = string.Empty;
 }
 
-public class CreateDonorCommandHandler : IRequestHandler<CreateDonorCommand, Result<string>>
+public class CreateDonorCommandHandler : IRequestHandler<CreateDonorCommand, Result<Donor>>
 {
     private readonly IApplicationDbContext _context;
     private readonly IIdentityService _identityService;
@@ -34,7 +34,7 @@ public class CreateDonorCommandHandler : IRequestHandler<CreateDonorCommand, Res
         _identityService = identityService;
     }
 
-    public async Task<Result<string>> Handle(CreateDonorCommand command, CancellationToken cancellationToken)
+    public async Task<Result<Donor>> Handle(CreateDonorCommand command, CancellationToken cancellationToken)
     {
         using (var transaction = await _context.DatabaseFacade.BeginTransactionAsync())
         {
@@ -42,7 +42,7 @@ public class CreateDonorCommandHandler : IRequestHandler<CreateDonorCommand, Res
             if (!createDonorResult.Succeeded)
             {
                 await transaction.RollbackAsync();
-                return createDonorResult;
+                return Result.Failure<Donor>(default, createDonorResult.Errors);
             }
 
             var entity = new Donor(
@@ -65,7 +65,7 @@ public class CreateDonorCommandHandler : IRequestHandler<CreateDonorCommand, Res
             await _context.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync();
 
-            return Result.Success(entity.ApplicationUserId);
+            return Result.Success(entity);
         }
     }
 }

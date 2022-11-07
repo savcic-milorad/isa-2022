@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TransfusionAPI.Application.Common.Constants;
 using TransfusionAPI.Application.Common.Security;
+using TransfusionAPI.Domain.Constants;
 
 namespace TransfusionAPI.WebUI.Controllers;
 

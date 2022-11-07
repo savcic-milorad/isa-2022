@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using TransfusionAPI.Application.Common.Constants;
+using TransfusionAPI.Domain.Constants;
 
 namespace TransfusionAPI.Application.Identity.Commands.CreateDonor;
 

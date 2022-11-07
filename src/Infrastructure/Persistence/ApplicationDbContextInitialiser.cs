@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Text;
-using TransfusionAPI.Application.Common.Constants;
+using TransfusionAPI.Domain.Constants;
 
 namespace TransfusionAPI.Infrastructure.Persistence;
 

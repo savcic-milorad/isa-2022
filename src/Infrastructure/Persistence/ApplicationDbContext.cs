@@ -14,7 +14,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace TransfusionAPI.Infrastructure.Persistence;
 
-public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>, IApplicationDbContext
+public class ApplicationDbContext : IdentityDbContext<Identity.ApplicationUser, ApplicationRole, string>, IApplicationDbContext
 {
     private readonly IMediator _mediator;
     private readonly AuditableEntitySaveChangesInterceptor _auditableEntitySaveChangesInterceptor;

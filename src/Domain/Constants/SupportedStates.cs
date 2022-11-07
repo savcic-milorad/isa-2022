@@ -1,4 +1,4 @@
-﻿namespace TransfusionAPI.Application.Common.Constants;
+﻿namespace TransfusionAPI.Domain.Constants;
 
 public static class SupportedStates
 {

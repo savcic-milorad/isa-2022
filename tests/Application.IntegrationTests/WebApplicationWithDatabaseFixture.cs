@@ -10,7 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Respawn;
 using TransfusionAPI.Domain.Entities;
-using TransfusionAPI.Application.Common.Constants;
+using TransfusionAPI.Domain.Constants;
 
 namespace TransfusionAPI.Application.IntegrationTests;
 
@@ -65,9 +65,9 @@ public class WebApplicationWithDatabaseFixture
     {
         using var scope = _scopeFactory.CreateScope();
 
-        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Infrastructure.Identity.ApplicationUser>>();
 
-        var user = new ApplicationUser(userName);
+        var user = new Infrastructure.Identity.ApplicationUser(userName);
 
         var result = await userManager.CreateAsync(user, password);
 
@@ -114,12 +114,12 @@ public class WebApplicationWithDatabaseFixture
         return await context.FindAsync<TEntity>(keyValues);
     }
 
-    public async Task<(ApplicationUser? applicationUser, Donor? donor)> FindDonorAsync(string username)
+    public async Task<(Infrastructure.Identity.ApplicationUser? applicationUser, Donor? donor)> FindDonorAsync(string username)
     {
         using var scope = _scopeFactory.CreateScope();
 
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Infrastructure.Identity.ApplicationUser>>();
         var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
         
         var applicationUser = await userManager.FindByEmailAsync(username);

@@ -3,7 +3,7 @@ using TransfusionAPI.Application.Common.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using TransfusionAPI.Application.Common.Constants;
+using TransfusionAPI.Domain.Constants;
 
 namespace TransfusionAPI.Infrastructure.Identity;
 
@@ -21,6 +21,21 @@ public class IdentityService : IIdentityService
         _userManager = userManager;
         _userClaimsPrincipalFactory = userClaimsPrincipalFactory;
         _authorizationService = authorizationService;
+    }
+
+    public async Task<Result<Domain.Entities.ApplicationUser>> GetUserByUsedIdAsync(string userId)
+    {
+        var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId);
+        if (user is null)
+            return Result.Failure<Domain.Entities.ApplicationUser>(default, $"User with id <{userId}> could not be found");
+
+        var roles = await _userManager.GetRolesAsync(user);
+        var roleAssignedToUser = roles.SingleOrDefault();
+        if(roleAssignedToUser is null)
+            return Result.Failure<Domain.Entities.ApplicationUser>(default, $"User with id <{userId}> does not have a role assigned");
+
+        var domainApplicationUser = new Domain.Entities.ApplicationUser(user.NormalizedUserName, roleAssignedToUser);
+        return Result.Success(domainApplicationUser);
     }
 
     public async Task<string> GetUserNameAsync(string userId)
