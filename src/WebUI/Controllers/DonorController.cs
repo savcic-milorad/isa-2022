@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TransfusionAPI.Application.Common.Security;
 using TransfusionAPI.Application.Donors.Queries.GetDonorPersonalInfoQuery;
-using TransfusionAPI.Application.Identity.Commands.CreateDonor;
 using TransfusionAPI.Domain.Constants;
 
 namespace TransfusionAPI.WebUI.Controllers;

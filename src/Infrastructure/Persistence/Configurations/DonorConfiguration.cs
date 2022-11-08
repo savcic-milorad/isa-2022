@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using TransfusionAPI.Domain.Entities;
-using TransfusionAPI.Infrastructure.Identity;
 
 namespace TransfusionAPI.Infrastructure.Persistence.Configurations;
 
