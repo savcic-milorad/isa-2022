@@ -10,7 +10,7 @@ public class IdentityController : ApiControllerBase
 {
 
     //[Authorize(Roles = SupportedRoles.Administrator)]
-    [HttpGet("ApplicationUsers/{ApplicationUserId}")]
+    [HttpGet("ApplicationUsers/{applicationUserId}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApplicationUserDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetApplicationUser([FromRoute] string applicationUserId)

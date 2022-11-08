@@ -36,8 +36,8 @@ public static class ConfigureServices
             options.SwaggerDoc("v1", new OpenApiInfo
             {
                 Version = "v1",
-                Title = "Clean architecture API",
-                Description = "Starting point for a clean architecture solution"
+                Title = "Transfusion API",
+                Description = "API used for the transfusion centers: user administration, reservation management and transfusion auditing."
             });
         });
 
