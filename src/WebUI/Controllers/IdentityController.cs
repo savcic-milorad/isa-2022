@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using TransfusionAPI.Application.Identity.Commands.CreateDonor;
 using TransfusionAPI.Application.Identity.Queries.GetApplicationUser;
-using TransfusionAPI.Domain.Entities;
 
 namespace TransfusionAPI.WebUI.Controllers;
 
@@ -12,9 +11,9 @@ public class IdentityController : ApiControllerBase
 
     //[Authorize(Roles = SupportedRoles.Administrator)]
     [HttpGet("ApplicationUsers/{ApplicationUserId}")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApplicationUser))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApplicationUserDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> GetUser([FromRoute] string applicationUserId)
+    public async Task<IActionResult> GetApplicationUser([FromRoute] string applicationUserId)
     {
         var query = new GetApplicationUserQuery() { ApplicationUserId = applicationUserId };
 
@@ -27,7 +26,7 @@ public class IdentityController : ApiControllerBase
     }
 
     [HttpPost("Donors")]
-    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreatedDonorDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> RegisterDonor(CreateDonorCommand createDonorCommand)
     {
@@ -35,6 +34,6 @@ public class IdentityController : ApiControllerBase
         if (!result.Succeeded)
             return BadRequest(result.Errors);
 
-        return CreatedAtAction(nameof(GetUser), "Identity", new { applicationUserId = result.Payload.ApplicationUserId }, result.Payload);
+        return CreatedAtAction(nameof(DonorController.GetDonor), "Donor", new { donorId = result.Payload.Id }, result.Payload);
     }
 }

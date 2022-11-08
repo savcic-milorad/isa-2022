@@ -7,7 +7,7 @@ using TransfusionAPI.Domain.Events;
 
 namespace TransfusionAPI.Application.Identity.Commands.CreateDonor;
 
-public record CreateDonorCommand : IRequest<Result<Donor>>
+public record CreateDonorCommand : IRequest<Result<CreatedDonorDto>>
 {
     public string UserName { get; init; } = string.Empty;
     public string Password { get; init; } = string.Empty;
@@ -23,7 +23,7 @@ public record CreateDonorCommand : IRequest<Result<Donor>>
     public string OccupationInfo { get; init; } = string.Empty;
 }
 
-public class CreateDonorCommandHandler : IRequestHandler<CreateDonorCommand, Result<Donor>>
+public class CreateDonorCommandHandler : IRequestHandler<CreateDonorCommand, Result<CreatedDonorDto>>
 {
     private readonly IApplicationDbContext _context;
     private readonly IIdentityService _identityService;
@@ -34,7 +34,7 @@ public class CreateDonorCommandHandler : IRequestHandler<CreateDonorCommand, Res
         _identityService = identityService;
     }
 
-    public async Task<Result<Donor>> Handle(CreateDonorCommand command, CancellationToken cancellationToken)
+    public async Task<Result<CreatedDonorDto>> Handle(CreateDonorCommand command, CancellationToken cancellationToken)
     {
         using (var transaction = await _context.DatabaseFacade.BeginTransactionAsync())
         {
@@ -42,7 +42,7 @@ public class CreateDonorCommandHandler : IRequestHandler<CreateDonorCommand, Res
             if (!createDonorResult.Succeeded)
             {
                 await transaction.RollbackAsync();
-                return Result.Failure<Donor>(default, createDonorResult.Errors);
+                return Result.Failure<CreatedDonorDto>(default, createDonorResult.Errors);
             }
 
             var entity = new Donor(
@@ -65,7 +65,8 @@ public class CreateDonorCommandHandler : IRequestHandler<CreateDonorCommand, Res
             await _context.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync();
 
-            return Result.Success(entity);
+            var donorDto = CreatedDonorDto.From(entity);
+            return Result.Success(donorDto);
         }
     }
 }

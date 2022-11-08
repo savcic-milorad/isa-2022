@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TransfusionAPI.Application.Identity.Queries.GetApplicationUsers;
+namespace TransfusionAPI.Application.Donors.Commands;
 
-internal class GetApplicationUserQuery
+internal class FillQuestionnaireCommand
 {
 }
