@@ -4,15 +4,17 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { CoreModule } from './core/core.module';
 import { LandingComponent } from './features/landing/landing.component';
-import { ApiModule, Configuration } from './shared/transfusion-api-client';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [LandingComponent],
   imports: [
-    BrowserModule, 
+    BrowserModule,
+    BrowserAnimationsModule,
+    SharedModule,
     AppRoutingModule, 
-    CoreModule, 
-    ApiModule.forRoot(() => new Configuration({}))
+    CoreModule
   ],
   providers: [],
   bootstrap: [LandingComponent]
