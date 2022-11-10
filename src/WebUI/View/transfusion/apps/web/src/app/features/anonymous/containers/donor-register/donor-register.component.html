@@ -1,0 +1,111 @@
+<p>donor-register works!</p>
+
+<header>
+    <h2>Donor register</h2>
+</header>
+
+<main>
+    <mat-card class="register-form-card">
+        <form [formGroup]="registerForm" class="register-form-card__register-form">
+
+            <section class="register-form__basic-info">
+                <section class="basic-info__first-row">
+                    <mat-form-field appearance="outline">
+                        <mat-label>firstName</mat-label>
+                        <mat-hint>firstName</mat-hint>
+                        <input type="text" matInput formControlName="firstName">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill">
+                        <mat-label>lastName</mat-label>
+                        <!-- <mat-hint>lastName</mat-hint> -->
+                        <input type="text" matInput formControlName="lastName">
+                    </mat-form-field>
+                    <div>
+                        <label id="sex-radio-group-label">sex</label>
+                        <mat-radio-group formControlName="sex" aria-labelledby="sex-radio-group-label">
+                            <mat-radio-button [value]="0">
+                                Female
+                            </mat-radio-button>
+                            <mat-radio-button [value]="1">
+                                Male
+                            </mat-radio-button>
+                        </mat-radio-group>
+                    </div>
+                </section>
+
+                <section class="basic-info__second-row">
+                    <mat-form-field appearance="fill">
+                        <mat-label>jmbg</mat-label>
+                        <mat-hint>jmbg</mat-hint>
+                        <input type="text" matInput formControlName="jmbg">
+                    </mat-form-field>
+                </section>
+            </section>
+
+            <section class="register-form__location">
+                <section class="location__first-row">
+                    <mat-form-field appearance="fill">
+                        <mat-label>state</mat-label>
+                        <mat-hint>state</mat-hint>
+                        <input type="text" matInput formControlName="state">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill">
+                        <mat-label>homeAddress</mat-label>
+                        <mat-hint>homeAddress</mat-hint>
+                        <input type="text" matInput formControlName="homeAddress">
+                    </mat-form-field>
+                </section>
+                <section class="location__second-row">
+                    <mat-form-field appearance="fill">
+                        <mat-label>city</mat-label>
+                        <mat-hint>city</mat-hint>
+                        <input type="text" matInput formControlName="city">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill">
+                        <mat-label>phoneNumber</mat-label>
+                        <mat-hint>phoneNumber</mat-hint>
+                        <input type="text" matInput formControlName="phoneNumber">
+                    </mat-form-field>
+                </section>
+            </section>
+
+            <section class="register-form__occupation">
+                <mat-form-field appearance="fill">
+                    <mat-label>occupation</mat-label>
+                    <mat-hint>occupation</mat-hint>
+                    <input type="text" matInput formControlName="occupation">
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>occupationInfo</mat-label>
+                    <mat-hint>occupationInfo</mat-hint>
+                    <textarea matInput formControlName="occupationInfo"></textarea>
+                </mat-form-field>
+            </section>
+
+            <section class="register-form__credentials">
+                <mat-form-field appearance="fill">
+                    <mat-label>emailAddress</mat-label>
+                    <mat-hint>emailAddress</mat-hint>
+                    <input matInput type formControlName="emailAddress">
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>password</mat-label>
+                    <mat-hint>password</mat-hint>
+                    <input type="password" matInput formControlName="password">
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>confirmPassword</mat-label>
+                    <mat-hint>confirmPassword</mat-hint>
+                    <input type="password" matInput formControlName="confirmPassword">
+                </mat-form-field>
+            </section>
+
+            <button mat-raised-button color='primary' type="submit" [disabled]="!registerForm.valid" class="register-form__submit-btn">
+                Register
+            </button>
+
+        </form>
+
+    </mat-card>
+
+</main>

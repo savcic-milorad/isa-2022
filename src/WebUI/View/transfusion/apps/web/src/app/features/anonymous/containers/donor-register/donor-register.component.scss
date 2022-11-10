@@ -1,0 +1,37 @@
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 0 5em 0;
+}
+
+.register-form-card {
+    width: 50vw;
+
+  &__register-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+
+    &__basic-info {
+    }
+
+    &__location {
+    }
+
+    &__occupation {
+    }
+
+    &__credentials {
+    }
+
+    &__submit-btn {
+    }
+  }
+
+  & mat-form-field {
+    padding: 1em;
+  }
+}
