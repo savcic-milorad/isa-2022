@@ -1,37 +1,91 @@
-
 main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 0 0 5em 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 0 5em 0;
 }
 
-.register-form-card {
-    width: 50vw;
+.form {
+  padding: 2em 0.5em 2em 0.5em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: space-between;
+  justify-content: flex-start;
 
-  &__register-form {
+  &__basic-info {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
 
-    &__basic-info {
+    &__first-row {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      &__sex {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        &__radio-group {
+          padding: 0.5em;
+          & > mat-radio-button {
+            margin-right: 1em;
+          }
+        }
+      }
     }
 
-    &__location {
+    &__second-row {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      & > * {
+        width: 75%;
+      }
+    }
+  }
+
+  &__location {
+  }
+
+  &__occupation {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  &__credentials {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    &__first-row {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
     }
 
-    &__occupation {
+    &__second-row {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
     }
+  }
 
-    &__credentials {
-    }
-
-    &__submit-btn {
-    }
+  &__submit-btn {
+    margin-top: 1em;
   }
 
   & mat-form-field {
-    padding: 1em;
+    margin-inline: 0.2em;
+    margin-bottom: 0.5em;
+    min-width: 20em;
   }
+}
+
+hr {
+  width: 90%;
+  border-top: 1px;
 }

@@ -52,8 +52,11 @@ app.UseHealthChecks("/health");
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-
 app.UseRouting();
+app.UseCors(op =>
+{
+    op.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+});
 
 app.UseAuthentication();
 app.UseAuthorization();

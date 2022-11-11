@@ -14,21 +14,23 @@ import { CreateDonorCommand } from '../model/createDonorCommand';
 import { CreatedDonorDto } from '../model/createdDonorDto';
 import { Configuration } from '../configuration';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class IdentityService {
-    
+
     public defaultHeaders = new HttpHeaders({
-        'Accept': 'application/json', 
+        'Accept': 'application/json',
         'Content-Type': 'application/json'
     });
 
-    constructor(protected httpClient: HttpClient, protected configuration: Configuration) {}
+    constructor(protected httpClient: HttpClient, protected configuration: Configuration) { }
 
     /**
      * @param applicationUserId 
      * @param reportProgress flag to report request and response progress.
      */
-    public apiIdentityApplicationUsersApplicationUserIdGet(applicationUserId: string, reportProgress?: boolean): Observable<HttpResponse<ApplicationUserDto>> {
+    public apiIdentityApplicationUsersApplicationUserIdGet(applicationUserId: string): Observable<HttpResponse<ApplicationUserDto>> {
 
         if (applicationUserId === null || applicationUserId === undefined) {
             throw new Error('Required parameter applicationUserId was null or undefined when calling apiIdentityApplicationUsersApplicationUserIdGet.');
@@ -38,8 +40,7 @@ export class IdentityService {
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: this.defaultHeaders,
-                observe: 'response',
-                reportProgress: reportProgress
+                observe: 'response'
             }
         );
     }
@@ -48,15 +49,14 @@ export class IdentityService {
      * @param body
      * @param reportProgress flag to report request and response progress.
      */
-    public apiIdentityDonorsPost(body?: CreateDonorCommand, reportProgress?: boolean): Observable<HttpResponse<CreatedDonorDto>> {
+    public apiIdentityDonorsPost(body?: CreateDonorCommand): Observable<HttpResponse<CreatedDonorDto>> {
 
         return this.httpClient.request<CreatedDonorDto>('post', `${this.configuration.basePath}/api/Identity/Donors`,
             {
                 body: body,
                 withCredentials: this.configuration.withCredentials,
                 headers: this.defaultHeaders,
-                observe: 'response',
-                reportProgress: reportProgress
+                observe: 'response'
             }
         );
     }

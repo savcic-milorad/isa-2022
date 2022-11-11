@@ -10,7 +10,7 @@
  * Do not edit the class manually.
  */
 
-export interface ProblemDetails extends null<String, any> { 
+export interface ProblemDetails { 
   [key: string]: any;
 
 

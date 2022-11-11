@@ -26,7 +26,7 @@ export class DonorService {
      * @param donorId 
      * @param reportProgress flag to report request and response progress.
      */
-    public apiDonorDonorIdGet(donorId: number, reportProgress?: boolean): Observable<HttpResponse<DonorPersonalInfoDto>> {
+    public apiDonorDonorIdGet(donorId: number): Observable<HttpResponse<DonorPersonalInfoDto>> {
 
         if (donorId === null || donorId === undefined) {
             throw new Error('Required parameter donorId was null or undefined when calling apiDonorDonorIdGet.');
@@ -36,8 +36,7 @@ export class DonorService {
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: this.defaultHeaders,
-                observe: 'response',
-                reportProgress: reportProgress
+                observe: 'response'
             }
         );
     }

@@ -1,22 +1,66 @@
+import { HttpErrorResponse, HttpResponseBase, HttpStatusCode } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
+import { catchError, Observable, throwError } from "rxjs";
 import { IdentityService } from "../../shared/transfusion-api-client/api/identity.service";
-import { CenterSearchParameters } from "./models/center-search-parameters";
+import { CreateDonorCommand } from "../../shared/transfusion-api-client/model/models";
 import { AnonymousState } from "./state/anonymous.state";
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AnonymousFacade {
 
   constructor(private identityApi: IdentityService, private anonymousState: AnonymousState) { }
 
-  isUpdating$(): Observable<boolean> {
-    return this.anonymousState.isUpdating$();
+  isLoading$(): Observable<boolean> {
+    return this.anonymousState.isLoading$();
   }
 
-  getCenterSearchParameters$(): Observable<CenterSearchParameters> {
-    // state can be projected, or result from combination of multiple observables, or cached
-    return this.anonymousState.getCenterSearchParameters$();
+  register(command: CreateDonorCommand) {
+    this.anonymousState.setIsLoading(true);
+
+    this.identityApi.apiIdentityDonorsPost(command)
+    .pipe(
+      catchError(this.handleError)
+    )
+    .subscribe(
+    {
+      next: (val) => {
+        this.anonymousState.setCreatedDonor(val.body ?? {});
+      },
+      error: (err: Error) => {
+        this.anonymousState.setIsLoading(false);
+        
+        console.error(`Error from observer: ${err.message}`);
+      },
+      complete: () => {
+        console.log('COMPLETE');
+        this.anonymousState.setIsLoading(false);
+      }
+    });
   }
+
+  private handleError(error: HttpErrorResponse): Observable<never> {
+    if (error.status === 0) {
+      return throwError(() => new Error(`A network or client error occurred due to:\n${JSON.stringify(error.error)}`));
+    } 
+    else if(error.status === HttpStatusCode.NotFound) {
+      return throwError(() => new Error(`Request could not be processed due to:\n${JSON.stringify(error.error)}`));
+    }
+    else if(error.status === HttpStatusCode.BadRequest) {
+      return throwError(() => new Error(`Request could not be processed due to:\n${JSON.stringify(error.error)}`));
+    }
+    else if(error.status === HttpStatusCode.InternalServerError) {
+      return throwError(() => new Error('Server side error occured.'));
+    }
+    
+    return throwError(() => new Error(`Error message with unknown code occured: ${error.error}`));
+  }
+
+  // getCenterSearchParameters$(): Observable<CenterSearchParameters> {
+  //   // state can be projected, or result from combination of multiple observables, or cached
+  //   return this.anonymousState.getCenterSearchParameters$();
+  // }
 
   // TODO
   // loadCashflowCategories() {

@@ -1,23 +1,27 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
+import { CreatedDonorDto } from "../../../shared/transfusion-api-client/model/createdDonorDto";
 import { CenterSearchParameters } from "../models/center-search-parameters";
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AnonymousState {
 
-  private updating$ = new BehaviorSubject<boolean>(false);
+  private loading$ = new BehaviorSubject<boolean>(false);
   private centerSearchParameters$ = new BehaviorSubject<CenterSearchParameters>(CenterSearchParameters.Initial());
+  private createdDonor$ = new BehaviorSubject<CreatedDonorDto>({});
 
-  isUpdating$() {
-    return this.updating$.asObservable();
+  isLoading$() {
+    return this.loading$.asObservable();
   }
 
-  setUpdating(isUpdating: boolean) {
-    this.updating$.next(isUpdating);
+  setIsLoading(isLoading: boolean) {
+    this.loading$.next(isLoading);
   }
 
-  getCenterSearchParameters$() {
-    return this.centerSearchParameters$.asObservable();
+  setCreatedDonor(createdDonor: CreatedDonorDto) {
+    this.createdDonor$.next(createdDonor);
   }
 
   setCenterSearchParameters(centerSearchParameters: CenterSearchParameters) {
