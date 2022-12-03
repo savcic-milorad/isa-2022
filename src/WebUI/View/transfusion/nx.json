@@ -77,6 +77,9 @@
     },
     "@nrwl/angular:module": {
       "style": "scss"
+    },
+    "@trumbitta/nx-plugin-openapi:api-lib": {
+
     }
   },
   "defaultProject": "web"

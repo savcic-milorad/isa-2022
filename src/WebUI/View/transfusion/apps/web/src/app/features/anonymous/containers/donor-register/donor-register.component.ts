@@ -78,11 +78,7 @@ export class DonorRegisterComponent {
     );
   }
 
-  onLoginSubmit() {
-  }
-
   fillRegisterWithValidData() {
-    console.log('HIT');
     this.registerForm.controls.emailAddress.setValue("secretemail@email.org");
     this.registerForm.controls.password.setValue("Secret1234");
     this.registerForm.controls.confirmPassword.setValue("Secret1234");

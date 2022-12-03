@@ -21,7 +21,7 @@ public class DonorConfiguration : IEntityTypeConfiguration<Donor>
 
         builder.Property(t => t.ApplicationUserId).IsRequired();
 
-        builder.HasOne<Identity.ApplicationUser>()
+        builder.HasOne<Identity.ApplicationUserIdentity>()
             .WithOne()
             .HasForeignKey<Donor>(d => d.ApplicationUserId)
             .OnDelete(DeleteBehavior.Restrict);

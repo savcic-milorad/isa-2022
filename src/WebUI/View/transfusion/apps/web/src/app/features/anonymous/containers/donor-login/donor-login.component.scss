@@ -1,0 +1,49 @@
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 0 5em 0;
+}
+
+.form {
+  padding: 2em 0.5em 2em 0.5em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: space-between;
+  justify-content: flex-start;
+
+  &__credentials {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    &__first-row {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+
+    &__second-row {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+  }
+
+  &__submit-btn {
+    margin-top: 1em;
+  }
+
+  & mat-form-field {
+    margin-inline: 0.2em;
+    margin-bottom: 0.5em;
+    min-width: 20em;
+  }
+}
+
+hr {
+  width: 90%;
+  border-top: 1px;
+}

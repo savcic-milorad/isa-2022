@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Text;
 using TransfusionAPI.Domain.Constants;
+using TransfusionAPI.Application.Common.Interfaces;
+using TransfusionAPI.Application.Identity.Commands.CreateDonor;
 
 namespace TransfusionAPI.Infrastructure.Persistence;
 
@@ -11,15 +13,17 @@ public class ApplicationDbContextInitialiser
 {
     private readonly ILogger<ApplicationDbContextInitialiser> _logger;
     private readonly ApplicationDbContext _context;
-    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly UserManager<ApplicationUserIdentity> _userManager;
     private readonly RoleManager<ApplicationRole> _roleManager;
+    private readonly IIdentityService _identityService;
 
-    public ApplicationDbContextInitialiser(ILogger<ApplicationDbContextInitialiser> logger, ApplicationDbContext context, UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager)
+    public ApplicationDbContextInitialiser(ILogger<ApplicationDbContextInitialiser> logger, ApplicationDbContext context, UserManager<ApplicationUserIdentity> userManager, RoleManager<ApplicationRole> roleManager, IIdentityService identityService)
     {
         _logger = logger;
         _context = context;
         _userManager = userManager;
         _roleManager = roleManager;
+        _identityService = identityService;
     }
 
     public async Task InitialiseAsync(bool shouldDeleteDatabase = false)
@@ -28,7 +32,7 @@ public class ApplicationDbContextInitialiser
         {
             if (_context.Database.IsSqlServer())
             {
-                if(shouldDeleteDatabase)
+                if (shouldDeleteDatabase)
                 {
                     _logger.LogInformation("Ensuring database is deleted.");
                     await _context.Database.EnsureDeletedAsync();
@@ -74,7 +78,7 @@ public class ApplicationDbContextInitialiser
         }
     }
 
-    public async Task TrySeedAsync(bool shouldSeedRoles = true, bool shouldSeedUsers = true)
+    public async Task TrySeedAsync()
     {
         var supportedRoles = new List<ApplicationRole>()
         {
@@ -83,46 +87,68 @@ public class ApplicationDbContextInitialiser
             new ApplicationRole(SupportedRoles.Staff)
         };
 
+        var donors = new List<ApplicationUserIdentity>();
+        var administrators = new List<ApplicationUserIdentity>();
+        var staff = new List<ApplicationUserIdentity>();
+
+
         foreach (var supportedRole in supportedRoles)
         {
-            var applicationUsersForSupportedRole = new List<ApplicationUser>();
-            if (_roleManager.Roles.All(r => r.Name != supportedRole.Name)
-                && shouldSeedRoles)
-            {
-                _logger.LogInformation("Seeding database with Role: \n{@supportedRole}", supportedRole);
-                await _roleManager.CreateAsync(supportedRole);
-            }
-            else
+            if (_roleManager.Roles.Any(r => r.Name == supportedRole.Name))
+                continue;
+            
+            _logger.LogInformation("Seeding database with Role: \n{@supportedRole}", supportedRole);
+            await _roleManager.CreateAsync(supportedRole);
+        }
+
+
+        administrators.Add(new ApplicationUserIdentity("administrator@mail.com"));
+        foreach (var administrator in administrators)
+        {
+            if (_userManager.Users.Any(u => u.UserName == administrator.UserName))
                 continue;
 
-            switch (supportedRole.Name)
-            {
-                case SupportedRoles.Administrator:
-                    applicationUsersForSupportedRole.Add(new ApplicationUser("administrator@mail.com"));
-                    break;
-                case SupportedRoles.Donor:
-                    applicationUsersForSupportedRole.Add(new ApplicationUser("donor@mail.com"));
-                    break;
-                case SupportedRoles.Staff:
-                    applicationUsersForSupportedRole.Add(new ApplicationUser("staff@mail.com"));
-                    break;
-                default:
-                    _logger.LogError("Unsupported {role} while seeding default users", supportedRole.NormalizedName);
-                    throw new NotImplementedException();
-            }
+            await _userManager.CreateAsync(administrator, "Password1!");
+            await _userManager.AddToRolesAsync(administrator, new[] { SupportedRoles.Administrator});
+            _logger.LogInformation("{Role} role has following user: \n{@User}", SupportedRoles.Administrator, administrator);
+        }
 
-            foreach (var applicationUserForSupportedRole in applicationUsersForSupportedRole)
+        staff.Add(new ApplicationUserIdentity("staff@mail.com"));
+        foreach (var staffMember in staff)
+        {
+            if (_userManager.Users.Any(u => u.UserName == staffMember.UserName))
+                continue;
+
+            await _userManager.CreateAsync(staffMember, "Password1!");
+            await _userManager.AddToRolesAsync(staffMember, new[] { SupportedRoles.Staff });
+            _logger.LogInformation("{Role} role has following user: \n{@User}", SupportedRoles.Staff, staffMember);
+        }
+
+        donors.Add(new ApplicationUserIdentity("donor@mail.com"));
+        foreach (var donor in donors)
+        {
+            if (_userManager.Users.Any(u => u.UserName == donor.UserName))
+                continue;
+
+            var donorCreateCommandHandler = new CreateDonorCommandHandler(_context, _identityService);
+
+            var createdDonor = await donorCreateCommandHandler.Handle(new CreateDonorCommand()
             {
-                if (_userManager.Users.All(u => u.UserName != applicationUserForSupportedRole.UserName)
-                    && shouldSeedUsers)
-                {
-                    await _userManager.CreateAsync(applicationUserForSupportedRole, "Password1!");
-                    await _userManager.AddToRolesAsync(applicationUserForSupportedRole, new[] { supportedRole.Name });
-                    _logger.LogInformation("{Role} role has following user: \n{@User}", supportedRole, applicationUserForSupportedRole);
-                }
-                else
-                    continue;
-            }
+                FirstName = "Seed",
+                LastName = "Seeder",
+                Sex = Domain.Enums.Sex.Male,
+                JMBG = "1122333445566",
+                State = SupportedStates.SupportedStatesArray.First(),
+                HomeAddress = "Address",
+                City = "Novi Sad",
+                PhoneNumber = "0211234567",
+                Occupation = "Seed data",
+                OccupationInfo = "Seeding data",
+                UserName = donor.UserName,
+                Password = "Password1!"
+            }, CancellationToken.None);
+
+            _logger.LogInformation("\nCreated donor: {@Donor}", createdDonor.Payload);
         }
     }
 }

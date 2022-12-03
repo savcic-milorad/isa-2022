@@ -1,4 +1,4 @@
-import { HttpErrorResponse, HttpResponseBase, HttpStatusCode } from "@angular/common/http";
+import { HttpErrorResponse, HttpStatusCode } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { catchError, Observable, throwError } from "rxjs";
 import { IdentityService } from "../../shared/transfusion-api-client/api/identity.service";
@@ -39,6 +39,30 @@ export class AnonymousFacade {
       }
     });
   }
+
+  // login(command: LoginCommand) {
+  //   this.anonymousState.setIsLoading(true);
+
+  //   this.identityApi.(command)
+  //   .pipe(
+  //     catchError(this.handleError)
+  //   )
+  //   .subscribe(
+  //   {
+  //     next: (val) => {
+  //       this.anonymousState.setCreatedDonor(val.body ?? {});
+  //     },
+  //     error: (err: Error) => {
+  //       this.anonymousState.setIsLoading(false);
+        
+  //       console.error(`Error from observer: ${err.message}`);
+  //     },
+  //     complete: () => {
+  //       console.log('COMPLETE');
+  //       this.anonymousState.setIsLoading(false);
+  //     }
+  //   });
+  // }
 
   private handleError(error: HttpErrorResponse): Observable<never> {
     if (error.status === 0) {
