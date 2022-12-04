@@ -2,6 +2,7 @@
 using TransfusionAPI.Application.Common.Security;
 using TransfusionAPI.Application.Donors.Queries.GetDonorPersonalInfoQuery;
 using TransfusionAPI.Domain.Constants;
+using TransfusionAPI.WebUI.Filters;
 
 namespace TransfusionAPI.WebUI.Controllers;
 
@@ -19,7 +20,7 @@ public class DonorController : ApiControllerBase
         var getDonorPersonalInfoQueryResult = await Mediator.Send(query);
 
         if (!getDonorPersonalInfoQueryResult.Succeeded)
-            return NotFound(); 
+            return ApiExceptionFilterAttribute.GenerateBadRequestProblemDetails(getDonorPersonalInfoQueryResult);
 
         return Ok(getDonorPersonalInfoQueryResult.Payload);
     }

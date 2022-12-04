@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
-import { CreatedDonorDto } from "../../../shared/transfusion-api-client/model/createdDonorDto";
+import { CreatedDonorDto } from "@transfusion/transfusion-api-client";
 import { CenterSearchParameters } from "../models/center-search-parameters";
 
 @Injectable({

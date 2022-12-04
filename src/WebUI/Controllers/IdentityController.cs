@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using TransfusionAPI.Application.Identity.Commands.CreateDonor;
 using TransfusionAPI.Application.Identity.Commands.Login;
 using TransfusionAPI.Application.Identity.Queries.GetApplicationUser;
+using TransfusionAPI.WebUI.Filters;
 
 namespace TransfusionAPI.WebUI.Controllers;
 
@@ -19,7 +20,7 @@ public class IdentityController : ApiControllerBase
         var result = await Mediator.Send(query);
 
         if (!result.Succeeded)
-            return BadRequest(result.Errors);
+            return ApiExceptionFilterAttribute.GenerateBadRequestProblemDetails(result);
 
         return Ok(result.Payload);
     }
@@ -31,7 +32,7 @@ public class IdentityController : ApiControllerBase
     {
         var result = await Mediator.Send(createDonorCommand);
         if (!result.Succeeded)
-            return BadRequest(result.Errors);
+            return ApiExceptionFilterAttribute.GenerateBadRequestProblemDetails();
 
         return CreatedAtAction(nameof(DonorController.GetDonor), "Donor", new { donorId = result.Payload.Id }, result.Payload);
     }
@@ -44,7 +45,7 @@ public class IdentityController : ApiControllerBase
     {
         var result = await Mediator.Send(loginCommand);
         if (!result.Succeeded)
-            return Unauthorized(result.Errors);
+            return ApiExceptionFilterAttribute.GenerateForbiddenAccessProblemDetails();
 
         return Ok(result.Payload);
     }

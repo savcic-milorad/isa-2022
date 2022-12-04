@@ -50,19 +50,18 @@ public class IdentityService : IIdentityService
         if(associatedRole is null)
             return Result.Failure<string>(default, $"User with credentials, username: {username} and pw: {password}, does not have an assigned role");
 
-        var claimsPrincipal = await _userClaimsPrincipalFactory.CreateAsync(user);
-        claimsPrincipal.Claims.Concat(new List<Claim>()
+        var claims = new List<Claim>()
         {
             new Claim("role", associatedRole),
             new Claim("username", user.NormalizedUserName),
             new Claim("userId", user.Id)
-        });
+        };
 
         var secretKeyBytes = Encoding.ASCII.GetBytes("token-generation-secret");
         var jwt = new JwtSecurityToken(
             issuer: "transfusion-api",
             audience: "transfusion-api",
-            claims: claimsPrincipal.Claims, 
+            claims: claims, 
             notBefore: DateTime.UtcNow, 
             expires: DateTime.UtcNow.AddYears(2), 
             signingCredentials: new SigningCredentials(new SymmetricSecurityKey(secretKeyBytes), SecurityAlgorithms.HmacSha256Signature)

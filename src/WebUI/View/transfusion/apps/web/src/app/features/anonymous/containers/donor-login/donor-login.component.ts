@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { LoginCommand } from '@transfusion/transfusion-api-client';
 import { Observable } from 'rxjs';
 import { AnonymousFacade } from '../../anonymous.facade';
 
@@ -9,12 +10,12 @@ import { AnonymousFacade } from '../../anonymous.facade';
   styleUrls: ['./donor-login.component.scss'],
 })
 export class DonorLoginComponent {
-  
+
   hidePassword = true;
   hideConfirmPassword = true;
   isLoading$: Observable<boolean>;
   loginForm;
-  
+
   constructor(private fb: FormBuilder, private anonymousFacade: AnonymousFacade) {
     this.isLoading$ = anonymousFacade.isLoading$();
 
@@ -25,7 +26,11 @@ export class DonorLoginComponent {
   }
 
   onLoginSubmit() {
-    console.log(`Submitted login for ${this.loginForm.value}`);
-    // this.anonymousFacade.
+    const loginCommand: LoginCommand = {
+      userName: this.loginForm.controls.emailAddress.value ?? '',
+      password: this.loginForm.controls.password.value ?? ''
+    };
+
+    this.anonymousFacade.login(loginCommand);
   }
 }

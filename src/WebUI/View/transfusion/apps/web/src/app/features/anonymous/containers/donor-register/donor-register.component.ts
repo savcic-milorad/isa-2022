@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { AbstractControl, FormBuilder, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import { Sex } from 'apps/web/src/app/shared/transfusion-api-client/model/sex';
+import { Sex } from '@transfusion/transfusion-api-client';
 import { AnonymousFacade } from '../../anonymous.facade';
 
 @Component({
@@ -25,7 +25,7 @@ export class DonorRegisterComponent {
     this.registerForm = this.fb.nonNullable.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
-      sex: [Sex.Female, Validators.required],
+      sex: [Sex.NUMBER_0, Validators.required],
       jmbg: ['', Validators.required],
       state: ['', Validators.required],
       city: ['', Validators.required],
@@ -84,7 +84,7 @@ export class DonorRegisterComponent {
     this.registerForm.controls.confirmPassword.setValue("Secret1234");
     this.registerForm.controls.firstName.setValue("John",);
     this.registerForm.controls.lastName.setValue("Smith",);
-    this.registerForm.controls.sex.setValue(0,);
+    this.registerForm.controls.sex.setValue(Sex.NUMBER_1,);
     this.registerForm.controls.jmbg.setValue("1100888112233",);
     this.registerForm.controls.state.setValue("Serbia",);
     this.registerForm.controls.homeAddress.setValue("Ulica",);

@@ -1,8 +1,10 @@
 import { HttpErrorResponse, HttpStatusCode } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { Router } from "@angular/router";
+import { CreateDonorCommand, LoginCommand } from "@transfusion/transfusion-api-client";
 import { catchError, Observable, throwError } from "rxjs";
+import { AuthState } from "../../shared/auth/auth.state.service";
 import { IdentityService } from "../../shared/transfusion-api-client/api/identity.service";
-import { CreateDonorCommand } from "../../shared/transfusion-api-client/model/models";
 import { AnonymousState } from "./state/anonymous.state";
 
 @Injectable({
@@ -10,7 +12,11 @@ import { AnonymousState } from "./state/anonymous.state";
 })
 export class AnonymousFacade {
 
-  constructor(private identityApi: IdentityService, private anonymousState: AnonymousState) { }
+  constructor(
+    private identityApi: IdentityService,
+    private anonymousState: AnonymousState,
+    private authState: AuthState,
+    private router: Router) { }
 
   isLoading$(): Observable<boolean> {
     return this.anonymousState.isLoading$();
@@ -30,7 +36,7 @@ export class AnonymousFacade {
       },
       error: (err: Error) => {
         this.anonymousState.setIsLoading(false);
-        
+
         console.error(`Error from observer: ${err.message}`);
       },
       complete: () => {
@@ -40,34 +46,36 @@ export class AnonymousFacade {
     });
   }
 
-  // login(command: LoginCommand) {
-  //   this.anonymousState.setIsLoading(true);
+  login(command: LoginCommand) {
+    this.anonymousState.setIsLoading(true);
+    this.identityApi.apiIdentityLoginPost(command)
+    .pipe(
+      catchError(this.handleError)
+    )
+    .subscribe(
+    {
+      next: (val) => {
+        this.authState.setAccessToken(val.body?.accessToken ?? '');
 
-  //   this.identityApi.(command)
-  //   .pipe(
-  //     catchError(this.handleError)
-  //   )
-  //   .subscribe(
-  //   {
-  //     next: (val) => {
-  //       this.anonymousState.setCreatedDonor(val.body ?? {});
-  //     },
-  //     error: (err: Error) => {
-  //       this.anonymousState.setIsLoading(false);
-        
-  //       console.error(`Error from observer: ${err.message}`);
-  //     },
-  //     complete: () => {
-  //       console.log('COMPLETE');
-  //       this.anonymousState.setIsLoading(false);
-  //     }
-  //   });
-  // }
+        const assignedRoleRoute = this.authState.getRouteForAssignedRole();
+        this.router.navigate([`/${assignedRoleRoute}`]);
+      },
+      error: (err: Error) => {
+        this.anonymousState.setIsLoading(false);
+
+        console.error(`Error from observer: ${err.message}`);
+      },
+      complete: () => {
+        console.log('COMPLETE');
+        this.anonymousState.setIsLoading(false);
+      }
+    });
+  }
 
   private handleError(error: HttpErrorResponse): Observable<never> {
     if (error.status === 0) {
       return throwError(() => new Error(`A network or client error occurred due to:\n${JSON.stringify(error.error)}`));
-    } 
+    }
     else if(error.status === HttpStatusCode.NotFound) {
       return throwError(() => new Error(`Request could not be processed due to:\n${JSON.stringify(error.error)}`));
     }
@@ -77,7 +85,7 @@ export class AnonymousFacade {
     else if(error.status === HttpStatusCode.InternalServerError) {
       return throwError(() => new Error('Server side error occured.'));
     }
-    
+
     return throwError(() => new Error(`Error message with unknown code occured: ${error.error}`));
   }
 
@@ -95,7 +103,7 @@ export class AnonymousFacade {
   // 1. update UI state
   // 2. call API
   // addCenter(addedCenterInStateWithoutId: Center) {
-    
+
   //   // state update
   //   this.anonymousState.addCenter(addedCenterInStateWithoutId);
 

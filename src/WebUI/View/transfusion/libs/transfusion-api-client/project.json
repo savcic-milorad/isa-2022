@@ -1,0 +1,19 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "transfusion-api-client",
+  "sourceRoot": "libs/transfusion-api-client",
+  "projectType": "library",
+  "targets": {
+    "generate-sources": {
+      "executor": "@trumbitta/nx-plugin-openapi:generate-api-lib-sources",
+      "options": {
+        "useDockerBuild": false,
+        "generator": "typescript-angular",
+        "sourceSpecPathOrUrl": "http://localhost:5000/swagger/v1/swagger.json",
+        "additionalProperties": "fileNaming=kebab-case,modelFileSuffix=.model",
+        "globalProperties": "models"
+      }
+    }
+  },
+  "tags": []
+}

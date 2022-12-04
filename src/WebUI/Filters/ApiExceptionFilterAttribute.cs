@@ -2,6 +2,7 @@
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using TransfusionAPI.Application.Common.Models;
 
 namespace TransfusionAPI.WebUI.Filters;
 
@@ -15,7 +16,6 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
         _exceptionHandlers = new Dictionary<Type, Action<ExceptionContext>>
             {
                 { typeof(ValidationException), HandleValidationException },
-                { typeof(NotFoundException), HandleNotFoundException },
                 { typeof(UnauthorizedAccessException), HandleUnauthorizedAccessException },
                 { typeof(ForbiddenAccessException), HandleForbiddenAccessException },
             };
@@ -70,53 +70,69 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
         context.ExceptionHandled = true;
     }
 
-    private void HandleNotFoundException(ExceptionContext context)
-    {
-        var exception = (NotFoundException)context.Exception;
-
-        var details = new ProblemDetails()
-        {
-            Type = "https://tools.ietf.org/html/rfc7231#section-6.5.4",
-            Title = "The specified resource was not found.",
-            Detail = exception.Message
-        };
-
-        context.Result = new NotFoundObjectResult(details);
-
-        context.ExceptionHandled = true;
-    }
-
     private void HandleUnauthorizedAccessException(ExceptionContext context)
     {
-        var details = new ProblemDetails
-        {
-            Status = StatusCodes.Status401Unauthorized,
-            Title = "Unauthorized",
-            Type = "https://tools.ietf.org/html/rfc7235#section-3.1"
-        };
-
-        context.Result = new ObjectResult(details)
-        {
-            StatusCode = StatusCodes.Status401Unauthorized
-        };
-
+        context.Result = GenerateUnaothorizedAccessProblemDetails();
         context.ExceptionHandled = true;
     }
 
     private void HandleForbiddenAccessException(ExceptionContext context)
     {
-        var details = new ProblemDetails
+        context.Result = GenerateForbiddenAccessProblemDetails();
+        context.ExceptionHandled = true;
+    }
+
+    public static ObjectResult GenerateUnaothorizedAccessProblemDetails(Result? result = null, string title = "Unauthorized")
+    {
+        var problemDetials = new ProblemDetails
         {
-            Status = StatusCodes.Status403Forbidden,
-            Title = "Forbidden",
-            Type = "https://tools.ietf.org/html/rfc7231#section-6.5.3"
+            Status = StatusCodes.Status401Unauthorized,
+            Title = title,
+            Type = "https://tools.ietf.org/html/rfc7235#section-3.1",
+            Extensions = { new KeyValuePair<string, object?>("errors", result?.Errors ?? Enumerable.Empty<string>()) }
         };
 
-        context.Result = new ObjectResult(details)
+        var objectResult = new ObjectResult(problemDetials)
+        {
+            StatusCode = StatusCodes.Status401Unauthorized,
+        };
+
+        return objectResult;
+    }
+
+    public static ObjectResult GenerateForbiddenAccessProblemDetails(Result? result = null, string title = "Forbidden")
+    {
+        var problemDetials = new ProblemDetails
+        {
+            Status = StatusCodes.Status403Forbidden,
+            Title = title,
+            Type = "https://tools.ietf.org/html/rfc7231#section-6.5.3",
+            Extensions = { new KeyValuePair<string, object?>("errors", result?.Errors ?? Enumerable.Empty<string>()) }
+        };
+
+        var objectResult = new ObjectResult(problemDetials)
         {
             StatusCode = StatusCodes.Status403Forbidden
         };
 
-        context.ExceptionHandled = true;
+        return objectResult;
+    }
+
+    public static ObjectResult GenerateBadRequestProblemDetails(Result? result = null, string title = "Bad request")
+    {
+        var problemDetials = new ProblemDetails
+        {
+            Status = StatusCodes.Status400BadRequest,
+            Title = title,
+            Type = "https://www.rfc-editor.org/rfc/rfc7231#section-6.5.1",
+            Extensions = { new KeyValuePair<string, object?>("errors", result?.Errors ?? Enumerable.Empty<string>()) }
+        };
+
+        var objectResult = new ObjectResult(problemDetials)
+        {
+            StatusCode = StatusCodes.Status400BadRequest
+        };
+
+        return objectResult;
     }
 }

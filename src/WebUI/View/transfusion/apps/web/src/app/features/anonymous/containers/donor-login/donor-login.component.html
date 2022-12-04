@@ -8,7 +8,7 @@
     <mat-card>
         <mat-tab-group mat-align-tabs="center" animationDuration="100ms">
             <mat-tab label="Login">
-                <form [formGroup]="loginForm" class="form">
+                <form [formGroup]="loginForm" class="form" (ngSubmit)="onLoginSubmit()">
                     <div class="form__section-header">
                         <b>Credentials</b>
                         <hr />
