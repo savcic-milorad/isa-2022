@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TransfusionAPI.Application.Identity.Queries.GetApplicationUser;
 using TransfusionAPI.Domain.Constants;
 
 namespace TransfusionAPI.WebUI.Controllers;
@@ -9,9 +8,9 @@ namespace TransfusionAPI.WebUI.Controllers;
 public class StaffController : ApiControllerBase
 {
     [HttpGet("SayHello")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApplicationUserDto))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
     public async Task<IActionResult> SayHelloToStaff()
     {
-        return Ok("Hello staff");
+        return Ok(await Task.FromResult("Hello staff"));
     }
 }

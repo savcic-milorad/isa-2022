@@ -5,4 +5,4 @@ export * from './src/model/donor-personal-info-dto.model';
 export * from './src/model/login-command.model';
 export * from './src/model/login-success-dto.model';
 export * from './src/model/problem-details.model';
-export * from './src/model/sex.model';
+export { Sex } from './src/model/sex.model';

@@ -1,0 +1,44 @@
+<mat-toolbar color='primary'>
+  <mat-toolbar-row>
+    <nav>
+      <ul>
+        <li class="my-brand">
+          <ng-content select='.brand-cont'></ng-content>
+        </li>
+
+        <ul class='primary-navigation'>
+          <ng-content select='.primary-navigation-cont'></ng-content>
+        </ul>
+
+        <ng-content *ngIf='logoutPossible; then logout else loginAndRegister'></ng-content>
+
+        <ng-template #logout>
+          <li class='my-logout'>
+            <button mat-raised-button color='accent' (click)='emitLogout()'>
+              <mat-icon>logout</mat-icon>
+              <span class="mat-title">Logout</span>
+            </button>
+          </li>
+        </ng-template>
+
+        <ng-template #loginAndRegister>
+          <li>
+            <button mat-raised-button color='accent' [routerLink]="['/anonymous/donor-login']">
+              <mat-icon>login</mat-icon>
+              <span class="mat-title">Login</span>
+            </button>
+          </li>
+          <li>
+            <button mat-raised-button color='accent' [routerLink]="['/anonymous/donor-register']">
+              <mat-icon>person_add</mat-icon>
+              <span class="mat-title">Register</span>
+            </button>
+          </li>
+        </ng-template>
+
+      </ul>
+    </nav>
+
+  </mat-toolbar-row>
+
+</mat-toolbar>

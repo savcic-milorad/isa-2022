@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { AbstractControl, FormBuilder, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { Sex } from '@transfusion/transfusion-api-client';
 import { AnonymousFacade } from '../../anonymous.facade';
 

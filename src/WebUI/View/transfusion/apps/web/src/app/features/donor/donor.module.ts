@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 import { DonorRoutingModule } from './donor-routing.module';
 import { DonorProfileComponent } from './containers/donor-profile/donor-profile.component';
-import { DonorComponent } from './containers/donor/donor.component';
+import { DonorHomepageComponent } from './containers/donor-homepage/donor-homepage.component';
+import { SharedModule } from '../../shared/shared.module';
 
 @NgModule({
-  declarations: [DonorComponent, DonorProfileComponent],
-  imports: [CommonModule, DonorRoutingModule],
+    declarations: [DonorProfileComponent, DonorHomepageComponent],
+    imports: [SharedModule, DonorRoutingModule]
 })
 export class DonorModule {}

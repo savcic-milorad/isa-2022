@@ -9,6 +9,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 const materialModules = [
   MatButtonModule,
@@ -19,7 +20,8 @@ const materialModules = [
   MatProgressBarModule,
   MatDividerModule,
   MatTabsModule,
-  MatIconModule
+  MatIconModule,
+  MatToolbarModule
 ];
 
 @NgModule({

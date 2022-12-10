@@ -1,0 +1,50 @@
+
+mat-toolbar-row {
+  display: flex;
+  align-items: center;
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+}
+
+nav {
+  display: flex;
+  flex-grow: 1;
+}
+
+nav > ul {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* width: 100%; */
+  flex-grow: 1;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+ul.primary-navigation {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-grow: 1;
+  margin-inline-start: 1.5em;
+  list-style: none;
+  padding: 0;
+}
+
+button.my-icon-button {
+  width: fit-content;
+}
+
+li.my-brand mat-icon {
+  font-size: 5em;
+  width: fit-content;
+}
+
+li.my-logout span {
+  margin-left: 0.25em;
+}
+
+.mat-display-1 {
+  margin: 0;
+}

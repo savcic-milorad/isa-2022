@@ -1,0 +1,18 @@
+
+<header>
+
+  <transfusion-navigation [logoutPossible]='logoutPossible' (logout)='logout($event)'>
+      <ng-container class="primary-navigation-cont">
+          <a mat-button [routerLink]="['profile']">
+              <span class='mat-title'>Profile</span>
+          </a>
+          <a mat-button [routerLink]="['users']">
+              <span class='mat-title'>Users overview</span>
+          </a>
+      </ng-container>
+  </transfusion-navigation>
+</header>
+
+<main>
+  <router-outlet></router-outlet>
+</main>

@@ -20,4 +20,12 @@ export class AuthFacade {
   getRouteForAssignedRole(): string {
     return this.authState.getRouteForAssignedRole();
   }
+
+  logout() {
+    return this.authState.removeAccessToken();
+  }
+
+  isLogoutPossible() {
+    return this.authState.isLogoutPossible();
+  }
 }

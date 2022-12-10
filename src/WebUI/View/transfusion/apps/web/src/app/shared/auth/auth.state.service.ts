@@ -7,8 +7,17 @@ import { TransfusionApiAccessTokenClaims } from "./models/transfusion-api-access
   providedIn: 'root'
 })
 export class AuthState {
-
   private readonly accessTokenLocalStorageKey: string = 'accessToken';
+
+  removeAccessToken() {
+    localStorage.removeItem(this.accessTokenLocalStorageKey);
+  }
+
+  isLogoutPossible() {
+    const accessTokenValue = localStorage.getItem(this.accessTokenLocalStorageKey) ?? '';
+    const isAccessTokenValueValid = accessTokenValue !== '';
+    return isAccessTokenValueValid;
+  }
 
   setAccessToken(accessToken: string) {
     localStorage.removeItem(this.accessTokenLocalStorageKey);
