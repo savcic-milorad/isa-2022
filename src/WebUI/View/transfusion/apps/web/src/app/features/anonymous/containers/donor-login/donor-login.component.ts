@@ -33,4 +33,19 @@ export class DonorLoginComponent {
 
     this.anonymousFacade.login(loginCommand);
   }
+
+  fillWithDonorData() {
+    this.loginForm.controls.emailAddress.setValue("donor@mail.com");
+    this.loginForm.controls.password.setValue("Password1!");
+  }
+
+  fillWithAdministratorData() {
+    this.loginForm.controls.emailAddress.setValue("administrator@mail.com");
+    this.loginForm.controls.password.setValue("Password1!");
+  }
+
+  fillWithStaffData() {
+    this.loginForm.controls.emailAddress.setValue("staff@mail.com");
+    this.loginForm.controls.password.setValue("Password1!");
+  }
 }

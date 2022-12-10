@@ -12,7 +12,7 @@ public class IdentityController : ApiControllerBase
 {
     [HttpGet("ApplicationUsers/{applicationUserId}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApplicationUserDto))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     public async Task<IActionResult> GetApplicationUser([FromRoute] string applicationUserId)
     {
         var query = new GetApplicationUserQuery() { ApplicationUserId = applicationUserId };
@@ -27,7 +27,7 @@ public class IdentityController : ApiControllerBase
 
     [HttpPost("Donors")]
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreatedDonorDto))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     public async Task<IActionResult> RegisterDonor(CreateDonorCommand createDonorCommand)
     {
         var result = await Mediator.Send(createDonorCommand);
@@ -39,8 +39,8 @@ public class IdentityController : ApiControllerBase
 
     [HttpPost("Login")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LoginSuccessDto))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
+    [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
     public async Task<IActionResult> Login(LoginCommand loginCommand)
     {
         var result = await Mediator.Send(loginCommand);

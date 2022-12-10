@@ -66,8 +66,6 @@ public static class ConfigureServices
             };
         });
 
-        services.AddAuthorization();
-
         return services;
     }
 }

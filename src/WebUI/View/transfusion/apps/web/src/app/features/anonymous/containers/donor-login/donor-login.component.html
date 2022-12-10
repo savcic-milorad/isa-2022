@@ -1,51 +1,65 @@
 <p>donor-register works!</p>
 
 <header>
-    <h2>Donor register</h2>
+  <h2>Donor register</h2>
 </header>
 
 <main>
-    <mat-card>
-        <mat-tab-group mat-align-tabs="center" animationDuration="100ms">
-            <mat-tab label="Login">
-                <form [formGroup]="loginForm" class="form" (ngSubmit)="onLoginSubmit()">
-                    <div class="form__section-header">
-                        <b>Credentials</b>
-                        <hr />
-                    </div>
-                    <section class="form__credentials">
-                        <mat-form-field appearance="outline">
-                            <mat-label>Email address</mat-label>
-                            <input matInput type="email" formControlName="emailAddress">
-                            <mat-error
-                                *ngIf="loginForm.controls.emailAddress.hasError('email') || loginForm.controls.emailAddress.hasError('required')">
-                                Please enter a valid email address
-                            </mat-error>
-                        </mat-form-field>
-                        <mat-form-field appearance="outline">
-                            <mat-label>Password</mat-label>
-                            <input [type]="hidePassword ? 'password' : 'text'" matInput formControlName="password">
-                            <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'"
-                                [attr.aria-pressed]="hidePassword">
-                                <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
-                            </button>
-                            <mat-error *ngIf="loginForm.controls.password.hasError('pattern') || loginForm.controls.password.hasError('minLength')">
-                                At least 8 characters with uppercase letters and numbers
-                            </mat-error>
-                        </mat-form-field>
-                    </section>
-                    <button mat-raised-button color='primary' type="submit" [disabled]="!loginForm.valid || (isLoading$ | async)"
-                        class="form__submit-btn">
-                        Login
-                    </button>
+  <mat-card>
+    <mat-tab-group mat-align-tabs="center" animationDuration="100ms">
+      <mat-tab label="Login">
+        <form [formGroup]="loginForm" class="form" (ngSubmit)="onLoginSubmit()">
+          <div class="form__section-header">
+            <b>Credentials</b>
+            <hr />
+          </div>
+          <section class="form__credentials">
+            <mat-form-field appearance="outline">
+              <mat-label>Email address</mat-label>
+              <input matInput type="email" formControlName="emailAddress">
+              <mat-error
+                *ngIf="loginForm.controls.emailAddress.hasError('email') || loginForm.controls.emailAddress.hasError('required')">
+                Please enter a valid email address
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Password</mat-label>
+              <input [type]="hidePassword ? 'password' : 'text'" matInput formControlName="password">
+              <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
+                [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword" type="button">
+                <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+              </button>
+              <mat-error
+                *ngIf="loginForm.controls.password.hasError('pattern') || loginForm.controls.password.hasError('minLength')">
+                At least 8 characters with uppercase letters and numbers
+              </mat-error>
+            </mat-form-field>
+          </section>
+          <button mat-raised-button color='primary' type="submit" [disabled]="!loginForm.valid || (isLoading$ | async)"
+            class="form__submit-btn">
+            Login
+          </button>
 
-                </form>
-            </mat-tab>
-        </mat-tab-group>
+          <button mat-flat-button (click)="fillWithDonorData()" color='secondary' type="button"
+            class="form__submit-btn">
+            Fill donor credentials
+          </button>
+          <button mat-flat-button (click)="fillWithStaffData()" color='secondary' type="button"
+            class="form__submit-btn">
+            Fill staff credentials
+          </button>
+          <button mat-flat-button (click)="fillWithAdministratorData()" color='secondary' type="button"
+            class="form__submit-btn">
+            Fill administrator credentials
+          </button>
 
-        <mat-card-footer>
-            <mat-progress-bar mode="indeterminate" *ngIf="isLoading$ | async"></mat-progress-bar>
-        </mat-card-footer>
-    </mat-card>
+        </form>
+      </mat-tab>
+    </mat-tab-group>
+
+    <mat-card-footer>
+      <mat-progress-bar mode="indeterminate" *ngIf="isLoading$ | async"></mat-progress-bar>
+    </mat-card-footer>
+  </mat-card>
 
 </main>

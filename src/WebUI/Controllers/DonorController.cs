@@ -12,8 +12,8 @@ public class DonorController : ApiControllerBase
 
     [HttpGet("{donorId}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DonorPersonalInfoDto))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
     public async Task<IActionResult> GetDonor([FromRoute(Name = "donorId")] int donorId)
     {
         var query = new GetDonorPersonalInfoQuery() { DonorId = donorId };

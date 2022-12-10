@@ -33,7 +33,6 @@ export class AuthState {
   private extractClaimsFromBase64EncodedToken(token: string): TransfusionApiAccessTokenClaims {
     try {
       const tokenContent = token.split(".")[1];
-      // const decodedTokenContent = Buffer.from(tokenContent, 'base64').toString();
       const decodedTokenContent = atob(tokenContent);
       const tokenClaims = JSON.parse(decodedTokenContent);
       return tokenClaims;
