@@ -29,36 +29,38 @@ export class AuthGuard implements CanLoad, CanActivate, CanActivateChild {
   }
 
   canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
-    console.log(`canActivateChild guard - childRoute.pathFromRoot: ${childRoute.pathFromRoot}`);
-    console.log(`canActivateChild guard - childRoute.url[0]: ${childRoute.url[0]}`);
     const role = this.authFacade.getRouteForAssignedRole();
-    if(role === childRoute.url[0].path) {
-      return true;
-    }
+    // console.log(`canActivateChild guard - childRoute.pathFromRoot: ${childRoute.pathFromRoot}`);
+    // console.log(`canActivateChild guard - childRoute.url[0]: ${childRoute.url[0]}`);
+    console.log(`canActivateChild guard - role: ${role}`);
 
-    const isValidAccessToken = true;
-    if(isValidAccessToken) {
-      return true;
-    }
-
-    const redirectToActualRole = this.router.createUrlTree([`/${role}`]);
-    return redirectToActualRole;
+    return true;
   }
 
   canLoad(route: Route, segments: UrlSegment[]): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
+    const role = this.authFacade.getRouteForAssignedRole();
+
     console.log(`canLoad guard - route.path: ${route.path}`);
     console.log(`canLoad guard - segments[0]: ${segments[0]}`);
-    const role = this.authFacade.getRouteForAssignedRole();
-    if(role === segments[0].path) {
+    console.log(`canLoad guard - role: ${role}`);
+
+    // Route and role match, continue
+    if (role === segments[0].path) {
+      console.log(`canLoad guard - all ok, continue`);
       return true;
     }
 
-    const isValidAccessToken = true;
-    if(isValidAccessToken) {
-      return true;
+    // Access token invalid, redirect to base
+    const isValidAccessToken = this.authFacade.isValidAccessToken();
+    if (!isValidAccessToken) {
+      console.log(`canLoad guard - invalid token, redirecting to base: ${role}`);
+      const redirectToBaseUrl = this.router.createUrlTree([`/`])
+      return redirectToBaseUrl;
     }
 
+    // Redirect to base of role
     const redirectToActualRole = this.router.createUrlTree([`/${role}`]);
-    return redirectToActualRole;
+    console.log(`canLoad guard - redirecting to actual role: ${role}`);
+    return redirectToActualRole;;
   }
 }

@@ -30,7 +30,8 @@ public class ApplicationDbContext : IdentityDbContext<Identity.ApplicationUserId
     }
 
     public DbSet<Donor> Donors => Set<Donor>();
-    
+    public DbSet<Administrator> Administrators => Set<Administrator>();
+
     public DatabaseFacade DatabaseFacade => Database;
 
 

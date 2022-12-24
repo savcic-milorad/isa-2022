@@ -1,146 +1,141 @@
-<p>donor-register works!</p>
-
-<header>
-    <h2>Donor register</h2>
-</header>
-
 <main>
-    <mat-card>
-        <mat-tab-group mat-align-tabs="center" animationDuration="100ms">
-            <mat-tab label="Register">
-                <form [formGroup]="registerForm" class="form" (ngSubmit)="onRegisterSubmit()">
+  <mat-card>
+    <mat-tab-group mat-align-tabs="center" animationDuration="100ms">
+      <mat-tab label="Register">
+        <form [formGroup]="registerForm" class="form" (ngSubmit)="onRegisterSubmit()">
 
-                    <div class="form__section-header">
-                        <b>Basic info</b>
-                        <hr />
-                    </div>
-                    <section class="form__basic-info">
-                        <section class="form__basic-info__first-row">
-                            <div class="form__basic-info__first-row__sex">
-                                <label id="form__basic-info__first-row__sex__radio-group-label">Sex</label>
-                                <mat-radio-group formControlName="sex"
-                                    class="form__basic-info__first-row__sex__radio-group"
-                                    aria-labelledby="form__basic-info__first-row__sex__radio-group-label">
-                                    <mat-radio-button [value]="0">
-                                        Female
-                                    </mat-radio-button>
-                                    <mat-radio-button [value]="1">
-                                        Male
-                                    </mat-radio-button>
-                                </mat-radio-group>
-                            </div>
-                            <mat-form-field appearance="outline">
-                                <mat-label>First name</mat-label>
-                                <input type="text" matInput formControlName="firstName">
-                            </mat-form-field>
-                            <mat-form-field appearance="outline">
-                                <mat-label>Last name</mat-label>
+          <div class="form__section-header">
+            <b>Basic info</b>
+            <hr />
+          </div>
+          <section class="form__basic-info">
+            <section class="form__basic-info__first-row">
+              <div class="form__basic-info__first-row__sex">
+                <label id="form__basic-info__first-row__sex__radio-group-label">Sex</label>
+                <mat-radio-group formControlName="sex" class="form__basic-info__first-row__sex__radio-group"
+                  aria-labelledby="form__basic-info__first-row__sex__radio-group-label">
+                  <mat-radio-button [value]="0">
+                    Female
+                  </mat-radio-button>
+                  <mat-radio-button [value]="1">
+                    Male
+                  </mat-radio-button>
+                </mat-radio-group>
+              </div>
+              <mat-form-field appearance="outline">
+                <mat-label>First name</mat-label>
+                <input type="text" matInput formControlName="firstName">
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Last name</mat-label>
 
-                                <input type="text" matInput formControlName="lastName">
-                            </mat-form-field>
-                        </section>
+                <input type="text" matInput formControlName="lastName">
+              </mat-form-field>
+            </section>
 
-                        <section class="form__basic-info__second-row">
-                            <mat-form-field appearance="outline">
-                                <mat-label>JMBG</mat-label>
-                                <input type="text" matInput formControlName="jmbg">
-                            </mat-form-field>
-                        </section>
-                    </section>
+            <section class="form__basic-info__second-row">
+              <mat-form-field appearance="outline">
+                <mat-label>JMBG</mat-label>
+                <input type="text" matInput formControlName="jmbg">
+              </mat-form-field>
+            </section>
+          </section>
 
-                    <div class="form__section-header">
-                        <b>Location</b>
-                        <hr />
-                    </div>
-                    <section class="form__location">
-                        <section class="form__location__first-row">
-                            <mat-form-field appearance="outline">
-                                <mat-label>State</mat-label>
-                                <input type="text" matInput formControlName="state">
-                            </mat-form-field>
-                            <mat-form-field appearance="outline">
-                                <mat-label>Home address</mat-label>
-                                <input type="text" matInput formControlName="homeAddress">
-                            </mat-form-field>
-                        </section>
-                        <section class="form__location__second-row">
-                            <mat-form-field appearance="outline">
-                                <mat-label>City</mat-label>
-                                <input type="text" matInput formControlName="city">
-                            </mat-form-field>
-                            <mat-form-field appearance="outline">
-                                <mat-label>Phone number</mat-label>
-                                <input type="text" matInput formControlName="phoneNumber">
-                            </mat-form-field>
-                        </section>
-                    </section>
+          <div class="form__section-header">
+            <b>Location</b>
+            <hr />
+          </div>
+          <section class="form__location">
+            <section class="form__location__first-row">
+              <mat-form-field appearance="outline">
+                <mat-label>State</mat-label>
+                <input type="text" matInput formControlName="state">
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Home address</mat-label>
+                <input type="text" matInput formControlName="homeAddress">
+              </mat-form-field>
+            </section>
+            <section class="form__location__second-row">
+              <mat-form-field appearance="outline">
+                <mat-label>City</mat-label>
+                <input type="text" matInput formControlName="city">
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Phone number</mat-label>
+                <input type="text" matInput formControlName="phoneNumber">
+              </mat-form-field>
+            </section>
+          </section>
 
-                    <div class="form__section-header">
-                        <b>Occupation</b>
-                        <hr />
-                    </div>
-                    <section class="form__occupation">
-                        <mat-form-field appearance="outline">
-                            <mat-label>Occupation</mat-label>
-                            <input type="text" matInput formControlName="occupation">
-                        </mat-form-field>
-                        <mat-form-field appearance="outline">
-                            <mat-label>Occupation info</mat-label>
-                            <textarea matInput formControlName="occupationInfo"></textarea>
-                        </mat-form-field>
-                    </section>
+          <div class="form__section-header">
+            <b>Occupation</b>
+            <hr />
+          </div>
+          <section class="form__occupation">
+            <mat-form-field appearance="outline">
+              <mat-label>Occupation</mat-label>
+              <input type="text" matInput formControlName="occupation">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Occupation info</mat-label>
+              <textarea matInput formControlName="occupationInfo"></textarea>
+            </mat-form-field>
+          </section>
 
-                    <div class="form__section-header">
-                        <b>Credentials</b>
-                        <hr />
-                    </div>
-                    <section class="form__credentials">
-                        <mat-form-field appearance="outline">
-                            <mat-label>Email address</mat-label>
-                            <input matInput type="email" formControlName="emailAddress">
-                            <mat-error
-                                *ngIf="registerForm.controls.emailAddress.hasError('email') || registerForm.controls.emailAddress.hasError('required')">
-                                Please enter a valid email address
-                            </mat-error>
-                        </mat-form-field>
-                        <mat-form-field appearance="outline">
-                            <mat-label>Password</mat-label>
-                            <input [type]="hidePassword ? 'password' : 'text'" matInput formControlName="password">
-                            <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'"
-                                [attr.aria-pressed]="hidePassword">
-                                <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
-                            </button>
-                            <mat-error *ngIf="registerForm.controls.password.hasError('pattern') || registerForm.controls.password.hasError('minLength')">
-                                At least 8 characters with uppercase letters and numbers
-                            </mat-error>
-                        </mat-form-field>
-                        <mat-form-field appearance="outline">
-                            <mat-label>Confirm password</mat-label>
-                            <input [type]="hideConfirmPassword ? 'password' : 'text'" matInput formControlName="confirmPassword">
-                            <button type="button" mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword" [attr.aria-label]="'Hide password'"
-                                [attr.aria-pressed]="hideConfirmPassword">
-                                <mat-icon>{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
-                            </button>
-                            <mat-error *ngIf="registerForm.hasError('mismatch')">
-                                Passwords must match
-                            </mat-error>
-                        </mat-form-field>
-                    </section>
-                    <button mat-raised-button color='primary' type="submit" [disabled]="!registerForm.valid || (isLoading$ | async)"
-                        class="form__submit-btn">
-                        Register
-                    </button>
-                    
-                    <button mat-flat-button (click)="fillRegisterWithValidData()" color='secondary' type="button" class="form__submit-btn">
-                        Fill with valid data
-                    </button>
-                </form>
-            </mat-tab>
-        </mat-tab-group>
+          <div class="form__section-header">
+            <b>Credentials</b>
+            <hr />
+          </div>
+          <section class="form__credentials">
+            <mat-form-field appearance="outline">
+              <mat-label>Email address</mat-label>
+              <input matInput type="email" formControlName="emailAddress">
+              <mat-error
+                *ngIf="registerForm.controls.emailAddress.hasError('email') || registerForm.controls.emailAddress.hasError('required')">
+                Please enter a valid email address
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Password</mat-label>
+              <input [type]="hidePassword ? 'password' : 'text'" matInput formControlName="password">
+              <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
+                [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+                <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+              </button>
+              <mat-error
+                *ngIf="registerForm.controls.password.hasError('pattern') || registerForm.controls.password.hasError('minLength')">
+                At least 8 characters with uppercase letters and numbers
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Confirm password</mat-label>
+              <input [type]="hideConfirmPassword ? 'password' : 'text'" matInput formControlName="confirmPassword">
+              <button type="button" mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword"
+                [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideConfirmPassword">
+                <mat-icon>{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+              </button>
+              <mat-error *ngIf="registerForm.hasError('mismatch')">
+                Passwords must match
+              </mat-error>
+            </mat-form-field>
+          </section>
+          <button mat-raised-button color='primary' type="submit"
+            [disabled]="!registerForm.valid || (isLoading$ | async)" class="form__submit-btn">
+            Register
+          </button>
 
-        <mat-card-footer>
-            <mat-progress-bar mode="indeterminate" *ngIf="isLoading$ | async"></mat-progress-bar>
-        </mat-card-footer>
-    </mat-card>
+          <button mat-flat-button (click)="fillRegisterWithValidData()" color='secondary' type="button"
+            class="form__submit-btn">
+            Fill with valid data
+          </button>
+        </form>
+      </mat-tab>
+    </mat-tab-group>
+
+    <mat-card-footer>
+      <mat-progress-bar mode="indeterminate" *ngIf="isLoading$ | async"></mat-progress-bar>
+    </mat-card-footer>
+  </mat-card>
 
 </main>

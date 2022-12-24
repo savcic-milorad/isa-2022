@@ -1,6 +1,7 @@
 <h1>staff-hello works!</h1>
 
-<p>Have you already said hello to the staff?</p>
+<p>Have you already said hello to the staff? {{hasSaidHello$ | async}}</p>
+<p>Have you said hello to the administrator? {{hasAdministratorSaidHello$ | async}}</p>
 
 <ng-container *ngIf="hasSaidHello$ | async; then happy else sad">
 </ng-container>
@@ -14,3 +15,4 @@
 
 <button (click)="sayHello()">Say hello</button>
 
+<button (click)="sayAdministratorHello()">Say hello to administrator</button>

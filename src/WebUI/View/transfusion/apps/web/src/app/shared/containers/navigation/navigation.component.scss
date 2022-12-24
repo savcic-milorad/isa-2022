@@ -1,4 +1,3 @@
-
 mat-toolbar-row {
   display: flex;
   align-items: center;
@@ -8,43 +7,27 @@ mat-toolbar-row {
 
 nav {
   display: flex;
-  flex-grow: 1;
-}
-
-nav > ul {
-  display: flex;
   justify-content: space-between;
   align-items: center;
-  /* width: 100%; */
   flex-grow: 1;
   list-style: none;
-  margin: 0;
-  padding: 0;
-}
 
-ul.primary-navigation {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  flex-grow: 1;
-  margin-inline-start: 1.5em;
-  list-style: none;
-  padding: 0;
-}
+  & > div.primary-navigation {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-grow: 1;
+    margin-inline-start: 1.5em;
+  }
 
-button.my-icon-button {
-  width: fit-content;
-}
+  & > div.auth-buttons {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-inline-start: 0.5em;
 
-li.my-brand mat-icon {
-  font-size: 5em;
-  width: fit-content;
-}
-
-li.my-logout span {
-  margin-left: 0.25em;
-}
-
-.mat-display-1 {
-  margin: 0;
+    & > * {
+      margin-left: 0.5em;
+    }
+  }
 }

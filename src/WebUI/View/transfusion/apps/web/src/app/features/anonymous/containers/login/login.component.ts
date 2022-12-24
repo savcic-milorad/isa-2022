@@ -5,11 +5,11 @@ import { Observable } from 'rxjs';
 import { AnonymousFacade } from '../../anonymous.facade';
 
 @Component({
-  selector: 'transfusion-donor-login',
-  templateUrl: './donor-login.component.html',
-  styleUrls: ['./donor-login.component.scss'],
+  selector: 'transfusion-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss'],
 })
-export class DonorLoginComponent {
+export class LoginComponent {
 
   hidePassword = true;
   hideConfirmPassword = true;

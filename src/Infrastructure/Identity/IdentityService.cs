@@ -152,4 +152,22 @@ public class IdentityService : IIdentityService
 
         return addToRoleResult.ToApplicationResult(user.Id);
     }
+
+    public async Task<Result<string>> CreateAdministratorAsync(string userName, string password)
+    {
+        var user = new ApplicationUserIdentity(userName);
+
+        var result = await _userManager.CreateAsync(user, password);
+        if (!result.Succeeded)
+            return result.ToApplicationResult<string>();
+
+        var addToRoleResult = await _userManager.AddToRoleAsync(user, SupportedRoles.Administrator);
+
+        return addToRoleResult.ToApplicationResult(user.Id);
+    }
+
+    public Task<Result<string>> CreateStaffAsync(string userName, string password, string TBD)
+    {
+        throw new NotImplementedException();
+    }
 }

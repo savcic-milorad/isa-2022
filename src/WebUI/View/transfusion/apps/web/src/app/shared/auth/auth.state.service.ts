@@ -47,7 +47,7 @@ export class AuthState {
       return tokenClaims;
     } catch (e) {
 
-      console.error(`Could not parse access token`);
+      console.warn(`Could not parse access token`);
       return {
         role: 'anonymous',
         username: '',

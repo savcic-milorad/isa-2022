@@ -22,7 +22,7 @@ export class NavigationComponent {
 
   // login() {
   //   this.router.navigate(['/anonymous/donor'])
-  //   { path: 'donor-login', component: DonorLoginComponent },
+  //   { path: 'login', component: DonorLoginComponent },
   //   { path: 'donor-register', component: DonorRegisterComponent },
   // }
 

@@ -10,8 +10,8 @@ dotnet ef database update --project .\src\Infrastructure\ --startup-project .\sr
 List all migrations
 dotnet ef migrations list --project .\src\Infrastructure\ --startup-project .\src\WebUI\
 
-Add initial migration
-dotnet ef migrations add --project .\src\Infrastructure\ --startup-project .\src\WebUI\ 'Initial migration'
+Add migration
+dotnet ef migrations add --project .\src\Infrastructure\ --startup-project .\src\WebUI\ 'Migration name'
 
 Update database with pending migrations
 dotnet ef database update --project .\src\Infrastructure\ --startup-project .\src\WebUI\

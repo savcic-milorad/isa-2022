@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { Router } from "@angular/router";
 import { AuthState } from "./auth.state.service";
 
 @Injectable({
@@ -6,7 +7,7 @@ import { AuthState } from "./auth.state.service";
 })
 export class AuthFacade {
 
-  constructor(private authState: AuthState) {
+  constructor(private authState: AuthState, private router: Router) {
   }
 
   saveAccessToken(accessToken: string) {
@@ -22,10 +23,18 @@ export class AuthFacade {
   }
 
   logout() {
-    return this.authState.removeAccessToken();
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigate(['/']);
+    });
+    this.authState.removeAccessToken();
   }
 
   isLogoutPossible() {
     return this.authState.isLogoutPossible();
+  }
+
+  isValidAccessToken(): boolean {
+    const accessToken = this.getAccessToken();
+    return accessToken !== undefined && accessToken !== null && accessToken !== '';
   }
 }

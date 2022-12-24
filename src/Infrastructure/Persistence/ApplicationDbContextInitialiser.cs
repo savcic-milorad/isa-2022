@@ -6,6 +6,7 @@ using System.Text;
 using TransfusionAPI.Domain.Constants;
 using TransfusionAPI.Application.Common.Interfaces;
 using TransfusionAPI.Application.Identity.Commands.CreateDonor;
+using TransfusionAPI.Application.Donors.Commands;
 
 namespace TransfusionAPI.Infrastructure.Persistence;
 
@@ -101,18 +102,6 @@ public class ApplicationDbContextInitialiser
             await _roleManager.CreateAsync(supportedRole);
         }
 
-
-        administrators.Add(new ApplicationUserIdentity("administrator@mail.com"));
-        foreach (var administrator in administrators)
-        {
-            if (_userManager.Users.Any(u => u.UserName == administrator.UserName))
-                continue;
-
-            await _userManager.CreateAsync(administrator, "Password1!");
-            await _userManager.AddToRolesAsync(administrator, new[] { SupportedRoles.Administrator});
-            _logger.LogInformation("{Role} role has following user: \n{@User}", SupportedRoles.Administrator, administrator);
-        }
-
         staff.Add(new ApplicationUserIdentity("staff@mail.com"));
         foreach (var staffMember in staff)
         {
@@ -149,6 +138,26 @@ public class ApplicationDbContextInitialiser
             }, CancellationToken.None);
 
             _logger.LogInformation("\nCreated donor: {@Donor}", createdDonor.Payload);
+        }
+
+        administrators.Add(new ApplicationUserIdentity("administrator@mail.com"));
+        foreach (var administrator in administrators)
+        {
+            if (_userManager.Users.Any(u => u.UserName == administrator.UserName))
+                continue;
+
+            var createAdministratorCommandHandler = new CreateAdministratorCommandHandler(_context, _identityService);
+
+            var createdAdministrator = await createAdministratorCommandHandler.Handle(new CreateAdministratorCommand()
+            {
+                UserName = administrator.UserName,
+                Password = "Password1!",
+                FirstName = "Seed",
+                LastName = "Seeder",
+                PhoneNumber = "0211234567"
+            }, CancellationToken.None);
+
+            _logger.LogInformation("\nCreated aadministrator: {@Administrator}", createdAdministrator.Payload);
         }
     }
 }

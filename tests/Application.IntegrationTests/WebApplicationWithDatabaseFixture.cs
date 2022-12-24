@@ -101,7 +101,7 @@ public class WebApplicationWithDatabaseFixture
         await _checkpoint.Reset(_configuration.GetConnectionString("DefaultConnection"));
 
         var initialiser = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitialiser>();
-        await initialiser.TrySeedAsync(shouldSeedUsers: false);
+        await initialiser.TrySeedAsync();
     }
 
     public async Task<TEntity?> FindAsync<TEntity>(params object[] keyValues)

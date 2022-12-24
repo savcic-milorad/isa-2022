@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AuthFacade } from 'apps/web/src/app/shared/auth/auth.facade.service';
+import { AuthFacade } from '../../../../shared/auth/auth.facade.service';
 
 @Component({
   selector: 'transfusion-anonymous-home',
@@ -14,6 +14,6 @@ export class AnonymousHomeComponent {
   }
 
   logout(event: string) {
-    throw new Error('Logout should not be possible from the anonymous module: ' + event);
+    this.authFacade.logout();
   }
 }

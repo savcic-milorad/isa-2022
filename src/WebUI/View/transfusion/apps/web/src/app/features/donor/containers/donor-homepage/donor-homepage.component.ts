@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AuthFacade } from 'apps/web/src/app/shared/auth/auth.facade.service';
+import { AuthFacade } from '../../../../shared/auth/auth.facade.service';
 
 @Component({
   selector: 'transfusion-donor-homepage',

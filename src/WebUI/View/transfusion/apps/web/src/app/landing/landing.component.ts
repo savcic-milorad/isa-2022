@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 
 @Component({
   selector: 'transfusion-root',
@@ -7,4 +7,9 @@ import { Component } from '@angular/core';
 })
 export class LandingComponent {
   title = 'web';
+
+  @HostListener('window:popstate', ['$event'])
+  onPopState() {
+    location.reload()
+  }
 }

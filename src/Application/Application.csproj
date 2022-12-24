@@ -20,7 +20,11 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Administrators\EventHandlers\" />
+      <Folder Include="Administrators\Queries\" />
       <Folder Include="Donors\EventHandlers\" />
+      <Folder Include="Staff\EventHandlers\" />
+      <Folder Include="Staff\Queries\" />
     </ItemGroup>
 
 </Project>

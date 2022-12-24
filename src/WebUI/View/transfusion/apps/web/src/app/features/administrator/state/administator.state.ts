@@ -21,7 +21,7 @@ export class AdministratorState {
     return this.alreadySaidHello$.asObservable();
   }
 
-  setAlreadySaidHello() {
-    this.alreadySaidHello$.next(true);
+  setSaidHello(hasSaidHello: boolean) {
+    this.alreadySaidHello$.next(hasSaidHello);
   }
 }

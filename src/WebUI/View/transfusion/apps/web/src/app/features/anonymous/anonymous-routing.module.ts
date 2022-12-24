@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AnonymousHomeComponent } from './containers/anonymous-home/anonymous-home.component';
 import { CenterSearchComponent } from './containers/center-search/center-search.component';
-import { DonorLoginComponent } from './containers/donor-login/donor-login.component';
+import { LoginComponent } from './containers/login/login.component';
 import { DonorRegisterComponent } from './containers/donor-register/donor-register.component';
 
 const routes: Routes = [
@@ -11,8 +11,8 @@ const routes: Routes = [
     component: AnonymousHomeComponent,
     children: [
       {
-        path: 'donor-login',
-        component: DonorLoginComponent
+        path: 'login',
+        component: LoginComponent
       },
       {
         path: 'donor-register',
