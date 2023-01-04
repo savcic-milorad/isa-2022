@@ -1,0 +1,30 @@
+<header>
+  <transfusion-navigation [logoutPossible]='logoutPossible' (logout)='logout()'>
+
+    <ng-container class="brand-cont">
+      <button mat-button disableRipple='true' class='my-icon-button' [routerLink]="['/donor']">
+        <mat-icon>person</mat-icon>
+        <span class="mat-display-1">Donor</span>
+      </button>
+    </ng-container>
+
+    <ng-container class="primary-navigation-cont">
+      <a mat-button [routerLink]="['search']">
+        <span class='mat-title'>Center search</span>
+      </a>
+      <a mat-button [routerLink]="['reservations']">
+        <span class='mat-title'>Reservations</span>
+      </a>
+      <a mat-button [routerLink]="['questionnaire']">
+        <span class='mat-title'>Questionnaire</span>
+      </a>
+      <a mat-button [routerLink]="['profile']">
+        <span class='mat-title'>Profile</span>
+      </a>
+    </ng-container>
+  </transfusion-navigation>
+</header>
+
+<main>
+  <router-outlet></router-outlet>
+</main>

@@ -65,9 +65,9 @@ public class WebApplicationWithDatabaseFixture
     {
         using var scope = _scopeFactory.CreateScope();
 
-        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Infrastructure.Identity.ApplicationUser>>();
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Infrastructure.Identity.ApplicationUserIdentity>>();
 
-        var user = new Infrastructure.Identity.ApplicationUser(userName);
+        var user = new Infrastructure.Identity.ApplicationUserIdentity(userName);
 
         var result = await userManager.CreateAsync(user, password);
 
@@ -101,7 +101,7 @@ public class WebApplicationWithDatabaseFixture
         await _checkpoint.Reset(_configuration.GetConnectionString("DefaultConnection"));
 
         var initialiser = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitialiser>();
-        await initialiser.TrySeedAsync(shouldSeedUsers: false);
+        await initialiser.TrySeedAsync();
     }
 
     public async Task<TEntity?> FindAsync<TEntity>(params object[] keyValues)
@@ -114,12 +114,12 @@ public class WebApplicationWithDatabaseFixture
         return await context.FindAsync<TEntity>(keyValues);
     }
 
-    public async Task<(Infrastructure.Identity.ApplicationUser? applicationUser, Donor? donor)> FindDonorAsync(string username)
+    public async Task<(Infrastructure.Identity.ApplicationUserIdentity? applicationUser, Donor? donor)> FindDonorAsync(string username)
     {
         using var scope = _scopeFactory.CreateScope();
 
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Infrastructure.Identity.ApplicationUser>>();
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Infrastructure.Identity.ApplicationUserIdentity>>();
         var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
         
         var applicationUser = await userManager.FindByEmailAsync(username);

@@ -9,7 +9,7 @@ public class ApplicationUser
     public string AssignedRole { get; private set; }
     public bool IsConfirmed { get; private set; }
 
-    public ApplicationUser(string userName, string assignedRole, bool isConfirmed = true)
+    public ApplicationUser(string userName, string assignedRole, bool isConfirmed)
     {
         if(!SupportedRoles.All.Contains(assignedRole))
             throw UnsupportedRoleException.AssignmentOfUnsupportedRole(assignedRole);

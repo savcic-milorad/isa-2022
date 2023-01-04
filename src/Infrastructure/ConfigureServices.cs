@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Identity;
 
 namespace TransfusionAPI.Infrastructure;
 
@@ -35,7 +36,7 @@ public static class ConfigureServices
         services.AddScoped<ApplicationDbContextInitialiser>();
 
         services
-            .AddIdentityCore<ApplicationUser>(op =>
+            .AddIdentityCore<ApplicationUserIdentity>(op =>
             {
                 op.User.RequireUniqueEmail = true;
                 op.Password.RequireNonAlphanumeric = false;
@@ -44,6 +45,8 @@ public static class ConfigureServices
             })
             .AddRoles<ApplicationRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
+
+        services.AddScoped<SignInManager<ApplicationUserIdentity>, SignInManager<ApplicationUserIdentity>>();
 
         services.AddTransient<IDateTime, DateTimeService>();
         services.AddTransient<IIdentityService, IdentityService>();
@@ -57,13 +60,11 @@ public static class ConfigureServices
                 ValidateAudience = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
-                ValidIssuer = "https://localhost:5001",
-                ValidAudience = "https://localhost:5001",
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("secret12345"))
+                ValidIssuer = "transfusion-api",
+                ValidAudience = "transfusion-api",
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("token-generation-secret"))
             };
         });
-
-        services.AddAuthorization();
 
         return services;
     }

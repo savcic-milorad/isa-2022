@@ -1,0 +1,33 @@
+mat-toolbar-row {
+  display: flex;
+  align-items: center;
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-grow: 1;
+  list-style: none;
+
+  & > div.primary-navigation {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-grow: 1;
+    margin-inline-start: 1.5em;
+  }
+
+  & > div.auth-buttons {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-inline-start: 0.5em;
+
+    & > * {
+      margin-left: 0.5em;
+    }
+  }
+}

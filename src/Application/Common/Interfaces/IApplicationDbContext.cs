@@ -11,6 +11,7 @@ public interface IApplicationDbContext
     DatabaseFacade DatabaseFacade { get; }
 
     DbSet<Donor> Donors { get; }
+    DbSet<Administrator> Administrators { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 

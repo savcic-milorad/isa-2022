@@ -24,7 +24,7 @@ public class CreateDonorCommandValidator : AbstractValidator<CreateDonorCommand>
             .Matches(@"^[0-9]{13,13}$");
         RuleFor(v => v.State)
             .MaximumLength(50)
-            .Must(SupportedStates.SupportedStatesArray.Contains)
+            .Must(s => SupportedStates.SupportedStatesArray.Contains(s, StringComparer.OrdinalIgnoreCase))
             .WithMessage($"State must be one of the following states: {string.Join(", ", SupportedStates.SupportedStatesArray)}");
         RuleFor(v => v.HomeAddress)
             .MaximumLength(100)

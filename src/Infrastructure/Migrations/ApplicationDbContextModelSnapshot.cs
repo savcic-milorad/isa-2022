@@ -128,6 +128,53 @@ namespace TransfusionAPI.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("TransfusionAPI.Domain.Entities.Administrator", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId")
+                        .IsUnique();
+
+                    b.ToTable("Administrators");
+                });
+
             modelBuilder.Entity("TransfusionAPI.Domain.Entities.Donor", b =>
                 {
                     b.Property<int>("Id")
@@ -236,7 +283,7 @@ namespace TransfusionAPI.Infrastructure.Migrations
                     b.ToTable("AspNetRoles", (string)null);
                 });
 
-            modelBuilder.Entity("TransfusionAPI.Infrastructure.Identity.ApplicationUser", b =>
+            modelBuilder.Entity("TransfusionAPI.Infrastructure.Identity.ApplicationUserIdentity", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -312,7 +359,7 @@ namespace TransfusionAPI.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("TransfusionAPI.Infrastructure.Identity.ApplicationUser", null)
+                    b.HasOne("TransfusionAPI.Infrastructure.Identity.ApplicationUserIdentity", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -321,7 +368,7 @@ namespace TransfusionAPI.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("TransfusionAPI.Infrastructure.Identity.ApplicationUser", null)
+                    b.HasOne("TransfusionAPI.Infrastructure.Identity.ApplicationUserIdentity", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -336,7 +383,7 @@ namespace TransfusionAPI.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TransfusionAPI.Infrastructure.Identity.ApplicationUser", null)
+                    b.HasOne("TransfusionAPI.Infrastructure.Identity.ApplicationUserIdentity", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -345,16 +392,25 @@ namespace TransfusionAPI.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("TransfusionAPI.Infrastructure.Identity.ApplicationUser", null)
+                    b.HasOne("TransfusionAPI.Infrastructure.Identity.ApplicationUserIdentity", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("TransfusionAPI.Domain.Entities.Administrator", b =>
+                {
+                    b.HasOne("TransfusionAPI.Infrastructure.Identity.ApplicationUserIdentity", null)
+                        .WithOne()
+                        .HasForeignKey("TransfusionAPI.Domain.Entities.Administrator", "ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("TransfusionAPI.Domain.Entities.Donor", b =>
                 {
-                    b.HasOne("TransfusionAPI.Infrastructure.Identity.ApplicationUser", null)
+                    b.HasOne("TransfusionAPI.Infrastructure.Identity.ApplicationUserIdentity", null)
                         .WithOne()
                         .HasForeignKey("TransfusionAPI.Domain.Entities.Donor", "ApplicationUserId")
                         .OnDelete(DeleteBehavior.Restrict)

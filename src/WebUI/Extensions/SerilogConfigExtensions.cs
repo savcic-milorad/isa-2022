@@ -27,8 +27,8 @@ public static class SerilogConfigExtensions
     {
         loggerConfig
             .MinimumLevel.Debug()
-            .MinimumLevel.Override("Microsoft", LogEventLevel.Debug)
-            .MinimumLevel.Override("System", LogEventLevel.Debug)
+            .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+            .MinimumLevel.Override("System", LogEventLevel.Warning)
             // Sinks which are used in development
             .WriteTo.Console();
     }
