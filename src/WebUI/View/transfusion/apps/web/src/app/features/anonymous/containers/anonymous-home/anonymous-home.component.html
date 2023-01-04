@@ -2,14 +2,14 @@
 
   <transfusion-navigation [logoutPossible]='logoutPossible' (logout)='logout($event)'>
     <ng-container class="brand-cont">
-      <button mat-button disableRipple='true' class='my-icon-button' [routerLink]="['']">
-        <mat-icon>local_hospital</mat-icon>
-        <span class="mat-display-1">Hospital</span>
+      <button mat-button disableRipple='true' class='my-icon-button' [routerLink]="['/']">
+        <mat-icon>bloodtype</mat-icon>
+        <span class="mat-display-1">Transfusion</span>
       </button>
     </ng-container>
 
     <ng-container class="primary-navigation-cont">
-      <a mat-button [routerLink]="['profile']">
+      <a mat-button [routerLink]="['search']">
         <span class='mat-title'>Center search</span>
       </a>
     </ng-container>

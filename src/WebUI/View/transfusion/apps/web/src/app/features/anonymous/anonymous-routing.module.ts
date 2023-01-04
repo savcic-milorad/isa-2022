@@ -4,12 +4,20 @@ import { AnonymousHomeComponent } from './containers/anonymous-home/anonymous-ho
 import { CenterSearchComponent } from './containers/center-search/center-search.component';
 import { LoginComponent } from './containers/login/login.component';
 import { DonorRegisterComponent } from './containers/donor-register/donor-register.component';
+import { AuthGuard } from '../../shared/auth/auth.guard';
 
 const routes: Routes = [
   {
     path: '',
     component: AnonymousHomeComponent,
+    canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
     children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'center-search'
+      },
       {
         path: 'login',
         component: LoginComponent
@@ -19,7 +27,7 @@ const routes: Routes = [
         component: DonorRegisterComponent
       },
       {
-        path: 'center-search',
+        path: 'search',
         component: CenterSearchComponent
       }
     ]

@@ -29,7 +29,7 @@ public class CreateAdministratorCommandHandler : IRequestHandler<CreateAdministr
     {
         using (var transaction = await _context.DatabaseFacade.BeginTransactionAsync())
         {
-            var createAdministratorResult = await _identityService.CreateDonorAsync(command.UserName, command.Password);
+            var createAdministratorResult = await _identityService.CreateAdministratorAsync(command.UserName, command.Password);
             if (!createAdministratorResult.Succeeded)
             {
                 await transaction.RollbackAsync();

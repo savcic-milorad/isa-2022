@@ -2,12 +2,11 @@ import { Component } from '@angular/core';
 import { AuthFacade } from '../../../../shared/auth/auth.facade.service';
 
 @Component({
-  selector: 'transfusion-donor-homepage',
-  templateUrl: './donor-homepage.component.html',
-  styleUrls: ['./donor-homepage.component.scss'],
+  selector: 'transfusion-staff-homepage',
+  templateUrl: './staff-homepage.component.html',
+  styleUrls: ['./staff-homepage.component.scss'],
 })
-export class DonorHomepageComponent {
-
+export class StaffHomepageComponent {
   logoutPossible: boolean;
 
   constructor(private authFacade: AuthFacade) {

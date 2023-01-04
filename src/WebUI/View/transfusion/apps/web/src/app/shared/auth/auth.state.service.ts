@@ -34,7 +34,7 @@ export class AuthState {
     const claims = this.extractClaimsFromBase64EncodedToken(accessToken);
     const roleLowerCase = claims.role.toLowerCase();
 
-    console.log(`Assigned role from persisted access token: ${roleLowerCase}`);
+    // console.log(`Assigned role from persisted access token: ${roleLowerCase}`);
 
     return roleLowerCase;
   }

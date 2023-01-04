@@ -16,17 +16,7 @@ export class NavigationComponent {
 
   emitLogout() {
     const msg = 'logout called';
-    console.log('[NavigationComponent] Logout emitted from navigation component with message: ' + msg);
+    // console.log('[NavigationComponent] Logout emitted from navigation component with message: ' + msg);
     this.logout.emit(msg);
   }
-
-  // login() {
-  //   this.router.navigate(['/anonymous/donor'])
-  //   { path: 'login', component: DonorLoginComponent },
-  //   { path: 'donor-register', component: DonorRegisterComponent },
-  // }
-
-  // register() {
-
-  // }
 }
